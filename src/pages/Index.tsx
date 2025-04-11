@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import Header from '@/components/Header';
 import TabNavigation from '@/components/TabNavigation';
@@ -8,7 +9,6 @@ import JavaScriptBehavior from '@/components/tabs/JavaScriptBehavior';
 import AppearanceMessaging from '@/components/tabs/AppearanceMessaging';
 import AdvancedRules from '@/components/tabs/AdvancedRules';
 import HelpSupport from '@/components/tabs/HelpSupport';
-import LivePreview from '@/components/LivePreview';
 import SaveChanges from '@/components/SaveChanges';
 
 const Index = () => {
@@ -16,27 +16,27 @@ const Index = () => {
   const [isSaving, setIsSaving] = useState(false);
   const [hasChanges, setHasChanges] = useState(false);
   
-  // General settings
+  // General settings - all disabled by default
   const [generalSettings, setGeneralSettings] = useState({
     enableProtection: false,
     showFrontendNotice: false,
-    disableForLoggedIn: true,
+    disableForLoggedIn: false,
     compatibilityMode: false,
   });
   
-  // Text protection settings
+  // Text protection settings - all disabled by default
   const [textSettings, setTextSettings] = useState({
-    disableRightClick: true,
-    disableTextSelection: true,
-    disableDragDrop: true,
-    disableKeyboardShortcuts: true,
+    disableRightClick: false,
+    disableTextSelection: false,
+    disableDragDrop: false,
+    disableKeyboardShortcuts: false,
     keyboardShortcuts: {
-      ctrlA: true,
-      ctrlC: true,
-      ctrlX: true,
-      ctrlS: true,
-      ctrlU: true,
-      f12: true,
+      ctrlA: false,
+      ctrlC: false,
+      ctrlX: false,
+      ctrlS: false,
+      ctrlU: false,
+      f12: false,
     },
   });
   
@@ -54,30 +54,30 @@ const Index = () => {
     }
   };
   
-  // Image protection settings
+  // Image protection settings - all disabled by default
   const [imageSettings, setImageSettings] = useState({
-    disableRightClickImages: true,
-    disableDraggingImages: true,
+    disableRightClickImages: false,
+    disableDraggingImages: false,
     transparentOverlay: false,
     serveCssBackground: false,
-    preventHotlinking: true,
+    preventHotlinking: false,
     lazyLoadWithObfuscation: false,
   });
   
-  // JavaScript behavior settings
+  // JavaScript behavior settings - all disabled by default
   const [jsSettings, setJsSettings] = useState({
-    disablePrint: true,
-    disableViewSource: true,
+    disablePrint: false,
+    disableViewSource: false,
     obfuscateHtml: false,
     disablePageRefresh: false,
     antiInspectTool: false,
   });
   
-  // Appearance & messaging settings
+  // Appearance & messaging settings - disabled by default
   const [appearanceSettings, setAppearanceSettings] = useState({
-    showTooltip: true,
+    showTooltip: false,
     showModal: false,
-    showProtectedBadge: true,
+    showProtectedBadge: false,
   });
   
   const [messages, setMessages] = useState({
@@ -86,12 +86,12 @@ const Index = () => {
     badgeText: 'Protected',
   });
   
-  // Advanced rules settings
+  // Advanced rules settings - all disabled by default
   const [advancedSettings, setAdvancedSettings] = useState({
     enablePerPostType: false,
-    applyToBlogPosts: true,
-    applyToPages: true,
-    applyToProducts: true,
+    applyToBlogPosts: false,
+    applyToPages: false,
+    applyToProducts: false,
     disableForCategories: false,
   });
   
@@ -196,7 +196,6 @@ const Index = () => {
         <div className="flex flex-col md:flex-row gap-6">
           <div className="md:w-64">
             <TabNavigation activeTab={activeTab} setActiveTab={setActiveTab} />
-            <LivePreview />
           </div>
           
           <div className="flex-1">
@@ -215,9 +214,9 @@ const Index = () => {
         </div>
         
         <div className="mt-8 text-center text-gray-500 text-sm">
-          Content Guard – Elegant Content & Image Protection v1.0.0
+          CopyProtect – Elegant Content & Image Protection v1.0.0
           <br />
-          <a href="#" className="text-purple-600 hover:underline">View Documentation</a> | <a href="#" className="text-purple-600 hover:underline">Contact Support</a>
+          <a href="#" className="text-[#0073e6] hover:underline">View Documentation</a> | <a href="#" className="text-[#0073e6] hover:underline">Contact Support</a>
         </div>
       </div>
     </div>

@@ -67,50 +67,50 @@ class CopyProtect_Admin {
      * Display the options page content
      */
     public function display_options_page() {
-        // Default values for options
+        // Default values for options (all disabled by default)
         $default_general = array(
             'enableProtection' => false,
             'showFrontendNotice' => false,
-            'disableForLoggedIn' => true,
+            'disableForLoggedIn' => false,
             'compatibilityMode' => false,
         );
 
         $default_text = array(
-            'disableRightClick' => true,
-            'disableTextSelection' => true,
-            'disableDragDrop' => true,
-            'disableKeyboardShortcuts' => true,
+            'disableRightClick' => false,
+            'disableTextSelection' => false,
+            'disableDragDrop' => false,
+            'disableKeyboardShortcuts' => false,
             'keyboardShortcuts' => array(
-                'ctrlA' => true,
-                'ctrlC' => true,
-                'ctrlX' => true,
-                'ctrlS' => true,
-                'ctrlU' => true,
-                'f12' => true,
+                'ctrlA' => false,
+                'ctrlC' => false,
+                'ctrlX' => false,
+                'ctrlS' => false,
+                'ctrlU' => false,
+                'f12' => false,
             ),
         );
 
         $default_image = array(
-            'disableRightClickImages' => true,
-            'disableDraggingImages' => true,
+            'disableRightClickImages' => false,
+            'disableDraggingImages' => false,
             'transparentOverlay' => false,
             'serveCssBackground' => false,
-            'preventHotlinking' => true,
+            'preventHotlinking' => false,
             'lazyLoadWithObfuscation' => false,
         );
 
         $default_js = array(
-            'disablePrint' => true,
-            'disableViewSource' => true,
+            'disablePrint' => false,
+            'disableViewSource' => false,
             'obfuscateHtml' => false,
             'disablePageRefresh' => false,
             'antiInspectTool' => false,
         );
 
         $default_appearance = array(
-            'showTooltip' => true,
+            'showTooltip' => false,
             'showModal' => false,
-            'showProtectedBadge' => true,
+            'showProtectedBadge' => false,
         );
 
         $default_messages = array(
@@ -121,9 +121,9 @@ class CopyProtect_Admin {
 
         $default_advanced = array(
             'enablePerPostType' => false,
-            'applyToBlogPosts' => true,
-            'applyToPages' => true,
-            'applyToProducts' => true,
+            'applyToBlogPosts' => false,
+            'applyToPages' => false,
+            'applyToProducts' => false,
             'disableForCategories' => false,
         );
 

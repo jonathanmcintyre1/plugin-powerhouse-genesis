@@ -5,8 +5,8 @@ import { Lock } from 'lucide-react';
 const Header = () => {
   return (
     <div className="relative mb-8 overflow-hidden rounded-lg shadow-md">
-      {/* Primary gradient background */}
-      <div className="bg-gradient-to-r from-[#8B0016] to-[#CC0000] p-6">
+      {/* Updated gradient background to match brand colors */}
+      <div className="bg-gradient-to-r from-[#2D2D2D] to-[#0073e6]/90 p-6">
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-3">
             <div className="flex h-12 w-12 items-center justify-center rounded-full bg-white shadow-inner">
@@ -18,7 +18,7 @@ const Header = () => {
             </div>
             <div>
               <h1 className="text-2xl font-bold text-white">CopyProtect</h1>
-              <p className="text-sm text-red-100">Elegant Content & Image Protection</p>
+              <p className="text-sm text-blue-100">Elegant Content & Image Protection</p>
             </div>
           </div>
           <div className="bg-white/20 backdrop-blur-sm text-white text-xs px-3 py-1 rounded-full font-medium">

@@ -114,11 +114,11 @@
 }
 
 input:checked + .slider {
-    background-color: #cc0000;
+    background-color: #0073e6;
 }
 
 input:focus + .slider {
-    box-shadow: 0 0 1px #cc0000;
+    box-shadow: 0 0 1px #0073e6;
 }
 
 input:checked + .slider:before {
@@ -149,18 +149,18 @@ input:disabled + .slider {
 
 /* Buttons */
 .button-primary {
-    background: #cc0000;
-    border-color: #8b0016;
+    background: #0073e6;
+    border-color: #005bb7;
     color: #fff;
     text-decoration: none;
     text-shadow: none;
-    box-shadow: 0 1px 0 #8b0016;
+    box-shadow: 0 1px 0 #005bb7;
 }
 
 .button-primary:hover, 
 .button-primary:focus {
-    background: #b80000;
-    border-color: #7a0014;
+    background: #0066cc;
+    border-color: #004c9e;
     color: #fff;
 }
 
@@ -197,7 +197,7 @@ input:disabled + .slider {
 
 .help-item .dashicons {
     margin-right: 8px;
-    color: #cc0000;
+    color: #e63238;
 }
 
 /* FAQ section */
@@ -232,4 +232,28 @@ input:disabled + .slider {
 .checkbox-container {
     display: block;
     margin-bottom: 8px;
+}
+
+/* Updated styles for active tab highlighting */
+.nav-tab-active, 
+.nav-tab-active:focus, 
+.nav-tab-active:focus:active, 
+.nav-tab-active:hover {
+    background: linear-gradient(to right, #2D2D2D, rgba(0, 115, 230, 0.9));
+    color: #fff;
+    border-color: #2D2D2D;
+}
+
+/* Shadow for cards */
+.card {
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
+}
+
+/* Header styling */
+.copyprotect-admin h1 {
+    background: linear-gradient(to right, #2D2D2D, rgba(0, 115, 230, 0.9));
+    color: #fff;
+    padding: 0.75rem;
+    border-radius: 4px;
+    margin-bottom: 20px;
 }
