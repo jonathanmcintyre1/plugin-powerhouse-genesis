@@ -70,6 +70,16 @@ class CopyProtect_Public {
             }
         }
         
+        // Check if user is logged in and we should disable protection
+        if (isset($general_settings['disableForLoggedIn']) && $general_settings['disableForLoggedIn'] && is_user_logged_in()) {
+            $apply_protection = false;
+        }
+        
+        // Don't apply protection in admin area
+        if (is_admin()) {
+            $apply_protection = false;
+        }
+        
         // Combine all settings into one array for JavaScript
         $settings = array(
             'textProtection' => $text_settings,

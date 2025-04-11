@@ -27,16 +27,36 @@ const Index = () => {
   // Text protection settings - all disabled by default
   const [textSettings, setTextSettings] = useState({
     disableRightClick: false,
+    disableRightClickImages: false,
     disableTextSelection: false,
     disableDragDrop: false,
     disableKeyboardShortcuts: false,
     keyboardShortcuts: {
+      // Developer tools
+      f12: false,
+      devTools: false,
+      
+      // Selection/editing
       ctrlA: false,
       ctrlC: false,
+      ctrlV: false,
       ctrlX: false,
+      ctrlF: false,
+      
+      // Navigation/browser
+      f3: false,
+      f6: false,
+      f9: false,
+      ctrlH: false,
+      ctrlL: false,
+      ctrlK: false,
+      ctrlO: false,
+      altD: false,
+      
+      // Save/print/view
       ctrlS: false,
+      ctrlP: false,
       ctrlU: false,
-      f12: false,
     },
   });
   

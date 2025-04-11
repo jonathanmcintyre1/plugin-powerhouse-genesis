@@ -42,7 +42,7 @@ const TabNavigation: React.FC<TabNavigationProps> = ({ activeTab, setActiveTab }
         >
           <span className={cn(
             "transition-colors duration-200",
-            activeTab === tab.id ? "text-white" : "text-gray-500"
+            activeTab === tab.id ? "text-white" : "text-[#8B0016]"
           )}>
             {tab.icon}
           </span>

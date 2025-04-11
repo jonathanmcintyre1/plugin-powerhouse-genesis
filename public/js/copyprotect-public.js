@@ -1,3 +1,4 @@
+
 /**
  * Public-facing JavaScript
  */
@@ -36,12 +37,22 @@
     
     // Set up text protection
     function setupTextProtection(settings) {
-        // Disable right click
+        // Disable right click on entire site
         if (settings.disableRightClick) {
             document.addEventListener('contextmenu', function(e) {
                 e.preventDefault();
                 showProtectionNotice('contextmenu');
                 return false;
+            });
+        }
+        // Disable right click on images only
+        else if (settings.disableRightClickImages) {
+            document.addEventListener('contextmenu', function(e) {
+                if (e.target.tagName === 'IMG') {
+                    e.preventDefault();
+                    showProtectionNotice('image');
+                    return false;
+                }
             });
         }
         
@@ -63,50 +74,148 @@
             document.addEventListener('keydown', function(e) {
                 var key = e.key.toLowerCase();
                 var ctrl = e.ctrlKey || e.metaKey;
+                var shift = e.shiftKey;
+                var alt = e.altKey;
                 
                 // Check for specific shortcuts
-                if (ctrl && settings.keyboardShortcuts) {
+                if (settings.keyboardShortcuts) {
+                    
+                    // Developer Tools Protection
+                    
+                    // F12 key
+                    if (e.key === 'F12' && settings.keyboardShortcuts.f12) {
+                        e.preventDefault();
+                        showProtectionNotice('keyboard');
+                        return false;
+                    }
+                    
+                    // Dev Tools combinations (Ctrl+Shift+I / Cmd+Opt+I)
+                    if (settings.keyboardShortcuts.devTools && 
+                        ((ctrl && shift && key === 'i') || (e.metaKey && alt && key === 'i'))) {
+                        e.preventDefault();
+                        showProtectionNotice('keyboard');
+                        return false;
+                    }
+                    
+                    // Text Selection & Copying
+                    
                     // Ctrl+A (Select All)
-                    if (key === 'a' && settings.keyboardShortcuts.ctrlA) {
+                    if (ctrl && key === 'a' && settings.keyboardShortcuts.ctrlA) {
                         e.preventDefault();
                         showProtectionNotice('keyboard');
                         return false;
                     }
                     
                     // Ctrl+C (Copy)
-                    if (key === 'c' && settings.keyboardShortcuts.ctrlC) {
+                    if (ctrl && key === 'c' && settings.keyboardShortcuts.ctrlC) {
+                        e.preventDefault();
+                        showProtectionNotice('keyboard');
+                        return false;
+                    }
+                    
+                    // Ctrl+V (Paste)
+                    if (ctrl && key === 'v' && settings.keyboardShortcuts.ctrlV) {
                         e.preventDefault();
                         showProtectionNotice('keyboard');
                         return false;
                     }
                     
                     // Ctrl+X (Cut)
-                    if (key === 'x' && settings.keyboardShortcuts.ctrlX) {
+                    if (ctrl && key === 'x' && settings.keyboardShortcuts.ctrlX) {
                         e.preventDefault();
                         showProtectionNotice('keyboard');
                         return false;
                     }
                     
+                    // Ctrl+F (Find)
+                    if (ctrl && key === 'f' && settings.keyboardShortcuts.ctrlF) {
+                        e.preventDefault();
+                        showProtectionNotice('keyboard');
+                        return false;
+                    }
+                    
+                    // Navigation & Browser Actions
+                    
+                    // F3 key (Find next)
+                    if (e.key === 'F3' && settings.keyboardShortcuts.f3) {
+                        e.preventDefault();
+                        showProtectionNotice('keyboard');
+                        return false;
+                    }
+                    
+                    // F6 key (Address bar)
+                    if (e.key === 'F6' && settings.keyboardShortcuts.f6) {
+                        e.preventDefault();
+                        showProtectionNotice('keyboard');
+                        return false;
+                    }
+                    
+                    // F9 key
+                    if (e.key === 'F9' && settings.keyboardShortcuts.f9) {
+                        e.preventDefault();
+                        showProtectionNotice('keyboard');
+                        return false;
+                    }
+                    
+                    // Ctrl+H / Cmd+Y (History)
+                    if ((ctrl && key === 'h' && settings.keyboardShortcuts.ctrlH) || 
+                        (e.metaKey && key === 'y' && settings.keyboardShortcuts.ctrlH)) {
+                        e.preventDefault();
+                        showProtectionNotice('keyboard');
+                        return false;
+                    }
+                    
+                    // Ctrl+L / Cmd+L (Address bar)
+                    if (ctrl && key === 'l' && settings.keyboardShortcuts.ctrlL) {
+                        e.preventDefault();
+                        showProtectionNotice('keyboard');
+                        return false;
+                    }
+                    
+                    // Ctrl+K / Cmd+K (Search)
+                    if (ctrl && key === 'k' && settings.keyboardShortcuts.ctrlK) {
+                        e.preventDefault();
+                        showProtectionNotice('keyboard');
+                        return false;
+                    }
+                    
+                    // Ctrl+O / Cmd+O (Open file)
+                    if (ctrl && key === 'o' && settings.keyboardShortcuts.ctrlO) {
+                        e.preventDefault();
+                        showProtectionNotice('keyboard');
+                        return false;
+                    }
+                    
+                    // Alt+D / Cmd+D (Bookmark)
+                    if ((alt && key === 'd' && settings.keyboardShortcuts.altD) || 
+                        (e.metaKey && key === 'd' && settings.keyboardShortcuts.altD)) {
+                        e.preventDefault();
+                        showProtectionNotice('keyboard');
+                        return false;
+                    }
+                    
+                    // Save, Print & View
+                    
                     // Ctrl+S (Save)
-                    if (key === 's' && settings.keyboardShortcuts.ctrlS) {
+                    if (ctrl && key === 's' && settings.keyboardShortcuts.ctrlS) {
+                        e.preventDefault();
+                        showProtectionNotice('keyboard');
+                        return false;
+                    }
+                    
+                    // Ctrl+P (Print)
+                    if (ctrl && key === 'p' && settings.keyboardShortcuts.ctrlP) {
                         e.preventDefault();
                         showProtectionNotice('keyboard');
                         return false;
                     }
                     
                     // Ctrl+U (View Source)
-                    if (key === 'u' && settings.keyboardShortcuts.ctrlU) {
+                    if (ctrl && key === 'u' && settings.keyboardShortcuts.ctrlU) {
                         e.preventDefault();
                         showProtectionNotice('keyboard');
                         return false;
                     }
-                }
-                
-                // F12 (Dev Tools)
-                if (e.key === 'F12' && settings.keyboardShortcuts && settings.keyboardShortcuts.f12) {
-                    e.preventDefault();
-                    showProtectionNotice('keyboard');
-                    return false;
                 }
             });
         }

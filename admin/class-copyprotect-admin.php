@@ -77,16 +77,36 @@ class CopyProtect_Admin {
 
         $default_text = array(
             'disableRightClick' => false,
+            'disableRightClickImages' => false,
             'disableTextSelection' => false,
             'disableDragDrop' => false,
             'disableKeyboardShortcuts' => false,
             'keyboardShortcuts' => array(
+                // Developer tools
+                'f12' => false,
+                'devTools' => false,
+                
+                // Selection/editing
                 'ctrlA' => false,
                 'ctrlC' => false,
+                'ctrlV' => false,
                 'ctrlX' => false,
+                'ctrlF' => false,
+                
+                // Navigation/browser
+                'f3' => false,
+                'f6' => false,
+                'f9' => false,
+                'ctrlH' => false,
+                'ctrlL' => false,
+                'ctrlK' => false,
+                'ctrlO' => false,
+                'altD' => false,
+                
+                // Save/print/view
                 'ctrlS' => false,
                 'ctrlU' => false,
-                'f12' => false,
+                'ctrlP' => false,
             ),
         );
 

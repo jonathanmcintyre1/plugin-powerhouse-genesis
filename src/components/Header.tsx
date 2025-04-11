@@ -5,7 +5,6 @@ import { Lock } from 'lucide-react';
 const Header = () => {
   return (
     <div className="relative mb-8 overflow-hidden rounded-lg shadow-md">
-      {/* Updated gradient background to match brand colors */}
       <div className="bg-gradient-to-r from-[#2D2D2D] to-[#0073e6]/90 p-6">
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-3">
