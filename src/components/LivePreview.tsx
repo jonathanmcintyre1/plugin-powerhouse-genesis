@@ -1,14 +1,14 @@
 
 import React from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Shield } from 'lucide-react';
+import { Lock } from 'lucide-react';
 
 const LivePreview: React.FC = () => {
   return (
-    <Card className="w-full">
-      <CardHeader className="bg-gray-50 border-b">
+    <Card className="w-full border-[#e0e0e0] shadow-sm hover:shadow-md transition-shadow duration-300">
+      <CardHeader className="bg-gradient-to-r from-[#6a11cb]/5 to-[#2575fc]/5 border-b border-[#e0e0e0]">
         <CardTitle className="text-sm flex items-center">
-          <Shield className="h-4 w-4 text-purple-600 mr-2" />
+          <Lock className="h-4 w-4 text-[#6a11cb] mr-2" />
           Live Preview
         </CardTitle>
         <CardDescription className="text-xs">
@@ -16,7 +16,7 @@ const LivePreview: React.FC = () => {
         </CardDescription>
       </CardHeader>
       <CardContent className="p-0">
-        <div className="relative w-full h-[300px] bg-white border-t border-gray-100">
+        <div className="relative w-full h-[300px] bg-white border-t border-[#e0e0e0]">
           <iframe 
             title="Content Preview" 
             className="w-full h-full"
@@ -24,22 +24,15 @@ const LivePreview: React.FC = () => {
           />
           <div className="absolute inset-0 flex items-center justify-center bg-white">
             <div className="text-center p-6">
-              <div className="text-gray-400 mb-2">
-                <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="mx-auto">
-                  <rect width="18" height="18" x="3" y="3" rx="2" />
-                  <path d="M7 7h.01" />
-                  <path d="M11 7h.01" />
-                  <path d="M15 7h.01" />
-                  <path d="M7 11h.01" />
-                  <path d="M11 11h.01" />
-                  <path d="M15 11h.01" />
-                  <path d="M7 15h.01" />
-                  <path d="M11 15h.01" />
-                  <path d="M15 15h.01" />
-                </svg>
+              <div className="text-[#2575fc] mb-2">
+                <img 
+                  src="/lovable-uploads/11897506-8ad0-4918-baf8-2256dcae8dbe.png" 
+                  alt="CopyProtect Logo" 
+                  className="mx-auto h-12 w-12 opacity-50"
+                />
               </div>
-              <h3 className="text-gray-600 font-medium">Live Preview</h3>
-              <p className="text-gray-500 text-sm mt-1">
+              <h3 className="text-[#333333] font-medium">Live Preview</h3>
+              <p className="text-[#666666] text-sm mt-1">
                 Apply settings to see them reflected here
               </p>
             </div>
@@ -47,8 +40,8 @@ const LivePreview: React.FC = () => {
           
           {/* Protection badge example */}
           <div className="absolute bottom-2 right-2">
-            <div className="bg-purple-50 text-purple-800 border border-purple-200 rounded-full px-2 py-1 text-xs flex items-center">
-              <Shield className="h-3 w-3 mr-1" />
+            <div className="bg-gradient-to-r from-[#6a11cb]/10 to-[#2575fc]/10 text-[#2575fc] border border-[#2575fc]/20 rounded-full px-2 py-1 text-xs flex items-center">
+              <Lock className="h-3 w-3 mr-1" />
               Protected
             </div>
           </div>

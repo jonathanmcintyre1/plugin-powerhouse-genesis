@@ -34,14 +34,15 @@ const TabNavigation: React.FC<TabNavigationProps> = ({ activeTab, setActiveTab }
           key={tab.id}
           onClick={() => setActiveTab(tab.id)}
           className={cn(
-            "flex items-center space-x-3 px-4 py-3 text-left rounded-md transition-colors",
+            "flex items-center space-x-3 px-4 py-3 text-left rounded-md transition-all duration-200",
             activeTab === tab.id
-              ? "bg-gradient-to-r from-purple-50 to-purple-100 text-purple-700 font-medium border-l-4 border-purple-600"
-              : "text-gray-600 hover:bg-gray-50"
+              ? "bg-gradient-to-r from-[#6a11cb]/10 to-[#2575fc]/10 text-[#2575fc] font-medium border-l-4 border-[#2575fc]"
+              : "text-[#444444] hover:bg-gray-50 hover:scale-[1.02]"
           )}
         >
           <span className={cn(
-            activeTab === tab.id ? "text-purple-600" : "text-gray-500"
+            "transition-colors duration-200",
+            activeTab === tab.id ? "text-[#6a11cb]" : "text-gray-500"
           )}>
             {tab.icon}
           </span>

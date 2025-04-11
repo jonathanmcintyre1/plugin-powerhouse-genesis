@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 import SwitchGroup from '../ui/switch-group';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { MessageSquare, AlertTriangle, Badge as BadgeIcon, Shield } from 'lucide-react';
+import { MessageSquare, AlertTriangle, Badge as BadgeIcon, Shield, Lock } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
@@ -34,17 +34,17 @@ const AppearanceMessaging: React.FC<AppearanceMessagingProps> = ({
   
   return (
     <div className="space-y-6">
-      <Card>
-        <CardHeader>
+      <Card className="border-[#e0e0e0] shadow-sm hover:shadow-md transition-shadow duration-300">
+        <CardHeader className="bg-gradient-to-r from-[#6a11cb]/5 to-[#2575fc]/5">
           <CardTitle className="flex items-center">
-            <MessageSquare className="h-5 w-5 text-purple-600 mr-2" />
+            <MessageSquare className="h-5 w-5 text-[#6a11cb] mr-2" />
             User Notifications
           </CardTitle>
           <CardDescription>
             Customize how users are notified about content protection
           </CardDescription>
         </CardHeader>
-        <CardContent className="space-y-4">
+        <CardContent className="space-y-4 pt-6">
           <SwitchGroup
             id="show-tooltip"
             label="Show Tooltip on Right Click"
@@ -54,14 +54,14 @@ const AppearanceMessaging: React.FC<AppearanceMessagingProps> = ({
           />
           
           {settings.showTooltip && (
-            <div className="ml-6 mt-2 mb-4">
+            <div className="ml-6 mt-2 mb-4 animate-fade-in">
               <Label htmlFor="tooltip-text" className="text-sm font-medium">Tooltip Message</Label>
               <Input
                 id="tooltip-text"
                 placeholder="Content is protected"
                 value={messages.tooltipText}
                 onChange={(e) => updateMessages('tooltipText', e.target.value)}
-                className="mt-1"
+                className="mt-1 border-[#e0e0e0] focus-visible:ring-[#2575fc]"
               />
             </div>
           )}
@@ -75,14 +75,14 @@ const AppearanceMessaging: React.FC<AppearanceMessagingProps> = ({
           />
           
           {settings.showModal && (
-            <div className="ml-6 mt-2 mb-4">
+            <div className="ml-6 mt-2 mb-4 animate-fade-in">
               <Label htmlFor="alert-text" className="text-sm font-medium">Alert Message</Label>
               <Textarea
                 id="alert-text"
                 placeholder="This content is protected. Copying is not allowed."
                 value={messages.alertText}
                 onChange={(e) => updateMessages('alertText', e.target.value)}
-                className="mt-1"
+                className="mt-1 border-[#e0e0e0] focus-visible:ring-[#2575fc]"
                 rows={3}
               />
             </div>
@@ -90,17 +90,17 @@ const AppearanceMessaging: React.FC<AppearanceMessagingProps> = ({
         </CardContent>
       </Card>
 
-      <Card>
-        <CardHeader>
+      <Card className="border-[#e0e0e0] shadow-sm hover:shadow-md transition-shadow duration-300">
+        <CardHeader className="bg-gradient-to-r from-[#6a11cb]/5 to-[#2575fc]/5">
           <CardTitle className="flex items-center">
-            <BadgeIcon className="h-5 w-5 text-purple-600 mr-2" />
+            <BadgeIcon className="h-5 w-5 text-[#6a11cb] mr-2" />
             Protection Indicators
           </CardTitle>
           <CardDescription>
             Visual cues to indicate that content is protected
           </CardDescription>
         </CardHeader>
-        <CardContent className="space-y-4">
+        <CardContent className="space-y-4 pt-6">
           <SwitchGroup
             id="show-protected-badge"
             label="'Protected' Badge"
@@ -110,7 +110,7 @@ const AppearanceMessaging: React.FC<AppearanceMessagingProps> = ({
           />
           
           {settings.showProtectedBadge && (
-            <div className="ml-6 mt-2 space-y-4">
+            <div className="ml-6 mt-2 space-y-4 animate-fade-in">
               <div>
                 <Label htmlFor="badge-text" className="text-sm font-medium">Badge Text</Label>
                 <Input
@@ -118,14 +118,14 @@ const AppearanceMessaging: React.FC<AppearanceMessagingProps> = ({
                   placeholder="Protected"
                   value={messages.badgeText}
                   onChange={(e) => updateMessages('badgeText', e.target.value)}
-                  className="mt-1"
+                  className="mt-1 border-[#e0e0e0] focus-visible:ring-[#2575fc]"
                 />
               </div>
               
               <div>
                 <Label htmlFor="badge-position" className="text-sm font-medium">Badge Position</Label>
                 <Select value={badgePosition} onValueChange={setBadgePosition}>
-                  <SelectTrigger id="badge-position" className="mt-1">
+                  <SelectTrigger id="badge-position" className="mt-1 border-[#e0e0e0] focus-visible:ring-[#2575fc]">
                     <SelectValue placeholder="Select position" />
                   </SelectTrigger>
                   <SelectContent>
@@ -137,9 +137,9 @@ const AppearanceMessaging: React.FC<AppearanceMessagingProps> = ({
                 </Select>
               </div>
               
-              <div className="bg-gray-50 p-4 rounded-md mt-4">
+              <div className="bg-[#F9F9F9] p-4 rounded-md mt-4 border border-[#e0e0e0]">
                 <Label className="text-sm font-medium mb-2 block">Preview</Label>
-                <div className="relative border border-gray-200 rounded-md h-48 bg-white">
+                <div className="relative border border-[#e0e0e0] rounded-md h-48 bg-white shadow-sm">
                   <div className={`absolute ${
                     badgePosition === 'top-left' ? 'top-2 left-2' :
                     badgePosition === 'top-right' ? 'top-2 right-2' :
@@ -148,9 +148,9 @@ const AppearanceMessaging: React.FC<AppearanceMessagingProps> = ({
                   }`}>
                     <Badge 
                       variant="outline" 
-                      className="bg-purple-50 text-purple-800 border border-purple-200 flex items-center gap-1"
+                      className="bg-gradient-to-r from-[#6a11cb]/10 to-[#2575fc]/10 text-[#2575fc] border border-[#2575fc]/20 flex items-center gap-1"
                     >
-                      <Shield className="h-3 w-3" />
+                      <Lock className="h-3 w-3" />
                       {messages.badgeText || 'Protected'}
                     </Badge>
                   </div>

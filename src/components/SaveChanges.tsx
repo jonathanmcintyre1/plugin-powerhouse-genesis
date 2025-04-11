@@ -32,7 +32,7 @@ const SaveChanges: React.FC<SaveChangesProps> = ({
 
   return (
     <div className={cn(
-      "flex items-center justify-between p-4 border-t bg-gray-50 rounded-b-lg",
+      "flex items-center justify-between p-4 border-t bg-[#F9F9F9] rounded-b-lg",
       className
     )}>
       <div className="text-sm text-gray-500">
@@ -46,8 +46,9 @@ const SaveChanges: React.FC<SaveChangesProps> = ({
         onClick={handleSave}
         disabled={isSaving || !hasChanges}
         className={cn(
-          "bg-purple-600 hover:bg-purple-700",
-          isSaving ? "opacity-80" : ""
+          "bg-gradient-to-r from-[#6a11cb] to-[#2575fc] hover:from-[#5b0fb3] hover:to-[#1e68e6] transition-all duration-200 hover:shadow-md",
+          isSaving ? "opacity-80" : "",
+          "transform hover:scale-[1.02] active:scale-[0.98]"
         )}
       >
         {isSaving ? (
