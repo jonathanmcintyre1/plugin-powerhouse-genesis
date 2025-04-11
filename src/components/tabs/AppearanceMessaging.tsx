@@ -14,13 +14,14 @@ interface AppearanceMessagingProps {
     showTooltip: boolean;
     showModal: boolean;
     showProtectedBadge: boolean;
+    badgePosition: string;
   };
   messages: {
     tooltipText: string;
     alertText: string;
     badgeText: string;
   };
-  updateSettings: (key: string, value: boolean) => void;
+  updateSettings: (key: string, value: any) => void;
   updateMessages: (key: string, value: string) => void;
 }
 
@@ -30,12 +31,10 @@ const AppearanceMessaging: React.FC<AppearanceMessagingProps> = ({
   updateSettings,
   updateMessages
 }) => {
-  const [badgePosition, setBadgePosition] = useState('bottom-right');
-  
   return (
     <div className="space-y-6">
       <Card className="border-[#e0e0e0] shadow-sm hover:shadow-md transition-shadow duration-300">
-        <CardHeader className="bg-gradient-to-r from-[#8B0016]/5 to-[#CC0000]/5">
+        <CardHeader className="bg-gradient-to-r from-[#f9f9f9] to-[#f0f0f0]">
           <CardTitle className="flex items-center">
             <MessageSquare className="h-5 w-5 text-[#8B0016] mr-2" />
             User Notifications
@@ -61,7 +60,7 @@ const AppearanceMessaging: React.FC<AppearanceMessagingProps> = ({
                 placeholder="Content is protected"
                 value={messages.tooltipText}
                 onChange={(e) => updateMessages('tooltipText', e.target.value)}
-                className="mt-1 border-[#e0e0e0] focus-visible:ring-[#CC0000]"
+                className="mt-1 border-[#e0e0e0] focus-visible:ring-[#0073e6]"
               />
             </div>
           )}
@@ -82,7 +81,7 @@ const AppearanceMessaging: React.FC<AppearanceMessagingProps> = ({
                 placeholder="This content is protected. Copying is not allowed."
                 value={messages.alertText}
                 onChange={(e) => updateMessages('alertText', e.target.value)}
-                className="mt-1 border-[#e0e0e0] focus-visible:ring-[#CC0000]"
+                className="mt-1 border-[#e0e0e0] focus-visible:ring-[#0073e6]"
                 rows={3}
               />
             </div>
@@ -91,13 +90,13 @@ const AppearanceMessaging: React.FC<AppearanceMessagingProps> = ({
       </Card>
 
       <Card className="border-[#e0e0e0] shadow-sm hover:shadow-md transition-shadow duration-300">
-        <CardHeader className="bg-gradient-to-r from-[#8B0016]/5 to-[#CC0000]/5">
+        <CardHeader className="bg-gradient-to-r from-[#f9f9f9] to-[#f0f0f0]">
           <CardTitle className="flex items-center">
             <BadgeIcon className="h-5 w-5 text-[#8B0016] mr-2" />
-            Protection Indicators
+            Protection Badge
           </CardTitle>
           <CardDescription>
-            Visual cues to indicate that content is protected
+            Display a floating badge to indicate content is protected
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4 pt-6">
@@ -118,14 +117,17 @@ const AppearanceMessaging: React.FC<AppearanceMessagingProps> = ({
                   placeholder="Protected"
                   value={messages.badgeText}
                   onChange={(e) => updateMessages('badgeText', e.target.value)}
-                  className="mt-1 border-[#e0e0e0] focus-visible:ring-[#CC0000]"
+                  className="mt-1 border-[#e0e0e0] focus-visible:ring-[#0073e6]"
                 />
               </div>
               
               <div>
                 <Label htmlFor="badge-position" className="text-sm font-medium">Badge Position</Label>
-                <Select value={badgePosition} onValueChange={setBadgePosition}>
-                  <SelectTrigger id="badge-position" className="mt-1 border-[#e0e0e0] focus-visible:ring-[#CC0000]">
+                <Select 
+                  value={settings.badgePosition} 
+                  onValueChange={(value) => updateSettings('badgePosition', value)}
+                >
+                  <SelectTrigger id="badge-position" className="mt-1 border-[#e0e0e0] focus-visible:ring-[#0073e6]">
                     <SelectValue placeholder="Select position" />
                   </SelectTrigger>
                   <SelectContent>
@@ -141,14 +143,14 @@ const AppearanceMessaging: React.FC<AppearanceMessagingProps> = ({
                 <Label className="text-sm font-medium mb-2 block">Preview</Label>
                 <div className="relative border border-[#e0e0e0] rounded-md h-48 bg-white shadow-sm">
                   <div className={`absolute ${
-                    badgePosition === 'top-left' ? 'top-2 left-2' :
-                    badgePosition === 'top-right' ? 'top-2 right-2' :
-                    badgePosition === 'bottom-left' ? 'bottom-2 left-2' :
+                    settings.badgePosition === 'top-left' ? 'top-2 left-2' :
+                    settings.badgePosition === 'top-right' ? 'top-2 right-2' :
+                    settings.badgePosition === 'bottom-left' ? 'bottom-2 left-2' :
                     'bottom-2 right-2'
                   }`}>
                     <Badge 
                       variant="outline" 
-                      className="bg-gradient-to-r from-[#8B0016]/10 to-[#CC0000]/10 text-[#CC0000] border border-[#CC0000]/20 flex items-center gap-1"
+                      className="bg-gradient-to-r from-[#8B0016]/10 to-[#CC0000]/10 text-[#8B0016] border border-[#8B0016]/20 flex items-center gap-1"
                     >
                       <Lock className="h-3 w-3" />
                       {messages.badgeText || 'Protected'}

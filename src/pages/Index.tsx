@@ -9,6 +9,7 @@ import JavaScriptBehavior from '@/components/tabs/JavaScriptBehavior';
 import AppearanceMessaging from '@/components/tabs/AppearanceMessaging';
 import AdvancedRules from '@/components/tabs/AdvancedRules';
 import HelpSupport from '@/components/tabs/HelpSupport';
+import KeyboardShortcuts from '@/components/tabs/KeyboardShortcuts';
 import SaveChanges from '@/components/SaveChanges';
 
 const Index = () => {
@@ -22,57 +23,44 @@ const Index = () => {
     showFrontendNotice: false,
     disableForLoggedIn: false,
     compatibilityMode: false,
+    excludedPages: [],
   });
   
   // Text protection settings - all disabled by default
   const [textSettings, setTextSettings] = useState({
     disableRightClick: false,
-    disableRightClickImages: false,
     disableTextSelection: false,
     disableDragDrop: false,
-    disableKeyboardShortcuts: false,
-    keyboardShortcuts: {
-      // Developer tools
-      f12: false,
-      devTools: false,
-      
-      // Selection/editing
-      ctrlA: false,
-      ctrlC: false,
-      ctrlV: false,
-      ctrlX: false,
-      ctrlF: false,
-      
-      // Navigation/browser
-      f3: false,
-      f6: false,
-      f9: false,
-      ctrlH: false,
-      ctrlL: false,
-      ctrlK: false,
-      ctrlO: false,
-      altD: false,
-      
-      // Save/print/view
-      ctrlS: false,
-      ctrlP: false,
-      ctrlU: false,
-    },
   });
   
-  // Update nested text settings (keyboard shortcuts)
-  const updateKeyboardShortcuts = (parent: string, key: string, value: boolean) => {
-    if (parent === 'keyboardShortcuts') {
-      setTextSettings(prev => ({
-        ...prev,
-        [parent]: {
-          ...prev[parent],
-          [key]: value,
-        },
-      }));
-      setHasChanges(true);
-    }
-  };
+  // Keyboard shortcuts settings - all disabled by default
+  const [keyboardSettings, setKeyboardSettings] = useState({
+    // Developer tools
+    f12: false,
+    devTools: false,
+    
+    // Selection/editing
+    ctrlA: false,
+    ctrlC: false,
+    ctrlV: false,
+    ctrlX: false,
+    ctrlF: false,
+    
+    // Navigation/browser
+    f3: false,
+    f6: false,
+    f9: false,
+    ctrlH: false,
+    ctrlL: false,
+    ctrlK: false,
+    ctrlO: false,
+    altD: false,
+    
+    // Save/print/view
+    ctrlS: false,
+    ctrlP: false,
+    ctrlU: false,
+  });
   
   // Image protection settings - all disabled by default
   const [imageSettings, setImageSettings] = useState({
@@ -98,6 +86,7 @@ const Index = () => {
     showTooltip: false,
     showModal: false,
     showProtectedBadge: false,
+    badgePosition: 'bottom-right',
   });
   
   const [messages, setMessages] = useState({
@@ -113,10 +102,11 @@ const Index = () => {
     applyToPages: false,
     applyToProducts: false,
     disableForCategories: false,
+    disabledCategories: [],
   });
   
   // Update general settings
-  const updateGeneralSettings = (key: string, value: boolean) => {
+  const updateGeneralSettings = (key: string, value: any) => {
     setGeneralSettings(prev => ({ ...prev, [key]: value }));
     setHasChanges(true);
   };
@@ -124,6 +114,12 @@ const Index = () => {
   // Update text protection settings
   const updateTextSettings = (key: string, value: boolean) => {
     setTextSettings(prev => ({ ...prev, [key]: value }));
+    setHasChanges(true);
+  };
+  
+  // Update keyboard shortcuts settings
+  const updateKeyboardSettings = (key: string, value: boolean) => {
+    setKeyboardSettings(prev => ({ ...prev, [key]: value }));
     setHasChanges(true);
   };
   
@@ -140,7 +136,7 @@ const Index = () => {
   };
   
   // Update appearance & messaging settings
-  const updateAppearanceSettings = (key: string, value: boolean) => {
+  const updateAppearanceSettings = (key: string, value: any) => {
     setAppearanceSettings(prev => ({ ...prev, [key]: value }));
     setHasChanges(true);
   };
@@ -152,7 +148,7 @@ const Index = () => {
   };
   
   // Update advanced rules settings
-  const updateAdvancedSettings = (key: string, value: boolean) => {
+  const updateAdvancedSettings = (key: string, value: any) => {
     setAdvancedSettings(prev => ({ ...prev, [key]: value }));
     setHasChanges(true);
   };
@@ -168,6 +164,7 @@ const Index = () => {
       console.log('Settings saved:', {
         generalSettings,
         textSettings,
+        keyboardSettings,
         imageSettings,
         jsSettings,
         appearanceSettings,
@@ -181,24 +178,28 @@ const Index = () => {
   const renderActiveTab = () => {
     switch (activeTab) {
       case 'general':
-        return <GeneralSettings settings={generalSettings} updateSettings={updateGeneralSettings} />;
+        return (
+          <>
+            <GeneralSettings 
+              settings={generalSettings} 
+              updateSettings={updateGeneralSettings} 
+            />
+            <AppearanceMessaging 
+              settings={appearanceSettings} 
+              messages={messages}
+              updateSettings={updateAppearanceSettings}
+              updateMessages={updateMessages}
+            />
+          </>
+        );
       case 'text':
-        return <TextProtection 
-          settings={textSettings} 
-          updateSettings={updateTextSettings}
-          updateNestedSettings={updateKeyboardShortcuts}
-        />;
+        return <TextProtection settings={textSettings} updateSettings={updateTextSettings} />;
+      case 'keyboard':
+        return <KeyboardShortcuts settings={keyboardSettings} updateSettings={updateKeyboardSettings} />;
       case 'image':
         return <ImageProtection settings={imageSettings} updateSettings={updateImageSettings} />;
       case 'javascript':
         return <JavaScriptBehavior settings={jsSettings} updateSettings={updateJsSettings} />;
-      case 'appearance':
-        return <AppearanceMessaging 
-          settings={appearanceSettings} 
-          messages={messages}
-          updateSettings={updateAppearanceSettings}
-          updateMessages={updateMessages}
-        />;
       case 'advanced':
         return <AdvancedRules settings={advancedSettings} updateSettings={updateAdvancedSettings} />;
       case 'help':

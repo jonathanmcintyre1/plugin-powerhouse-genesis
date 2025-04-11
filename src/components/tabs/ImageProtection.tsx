@@ -23,7 +23,7 @@ const ImageProtection: React.FC<ImageProtectionProps> = ({ settings, updateSetti
         <CardHeader>
           <CardTitle className="flex items-center">
             <ImageIcon className="h-5 w-5 text-[#8B0016] mr-2" />
-            Image Interaction Protection
+            Image Only Protection
           </CardTitle>
           <CardDescription>
             Prevent direct saving, dragging, or inspecting images
@@ -52,7 +52,7 @@ const ImageProtection: React.FC<ImageProtectionProps> = ({ settings, updateSetti
         <CardHeader>
           <CardTitle className="flex items-center">
             <Layers className="h-5 w-5 text-[#8B0016] mr-2" />
-            Image Source Protection
+            Advanced Image Protection
           </CardTitle>
           <CardDescription>
             Advanced methods to protect image sources and prevent saving

@@ -22,6 +22,43 @@ class CopyProtect_Admin {
      */
     public function enqueue_scripts() {
         wp_enqueue_script('copyprotect-admin', COPYPROTECT_PLUGIN_URL . 'admin/js/copyprotect-admin.js', array('jquery'), COPYPROTECT_VERSION, false);
+        
+        // Pass data to admin JS
+        wp_localize_script('copyprotect-admin', 'copyprotectAdmin', array(
+            'ajaxurl' => admin_url('admin-ajax.php'),
+            'nonce' => wp_create_nonce('copyprotect-admin-nonce'),
+            'pages' => $this->get_pages_for_dropdown(),
+        ));
+    }
+    
+    /**
+     * Get all pages for the dropdown
+     */
+    private function get_pages_for_dropdown() {
+        $pages = get_pages(array('sort_column' => 'post_title', 'sort_order' => 'ASC'));
+        $posts = get_posts(array('post_type' => 'post', 'posts_per_page' => -1, 'orderby' => 'title', 'order' => 'ASC'));
+        
+        $items = array();
+        
+        // Add pages
+        foreach ($pages as $page) {
+            $items[] = array(
+                'id' => $page->ID,
+                'title' => $page->post_title,
+                'type' => 'page'
+            );
+        }
+        
+        // Add posts
+        foreach ($posts as $post) {
+            $items[] = array(
+                'id' => $post->ID,
+                'title' => $post->post_title,
+                'type' => 'post'
+            );
+        }
+        
+        return $items;
     }
 
     /**
@@ -49,6 +86,9 @@ class CopyProtect_Admin {
         // Text Protection Settings
         register_setting('copyprotect_text_settings', 'copyprotect_text_settings');
         
+        // Keyboard Shortcuts Settings
+        register_setting('copyprotect_keyboard_settings', 'copyprotect_keyboard_settings');
+        
         // Image Protection Settings
         register_setting('copyprotect_image_settings', 'copyprotect_image_settings');
         
@@ -73,41 +113,41 @@ class CopyProtect_Admin {
             'showFrontendNotice' => false,
             'disableForLoggedIn' => false,
             'compatibilityMode' => false,
+            'excludedPages' => '',
         );
 
         $default_text = array(
             'disableRightClick' => false,
-            'disableRightClickImages' => false,
             'disableTextSelection' => false,
             'disableDragDrop' => false,
-            'disableKeyboardShortcuts' => false,
-            'keyboardShortcuts' => array(
-                // Developer tools
-                'f12' => false,
-                'devTools' => false,
-                
-                // Selection/editing
-                'ctrlA' => false,
-                'ctrlC' => false,
-                'ctrlV' => false,
-                'ctrlX' => false,
-                'ctrlF' => false,
-                
-                // Navigation/browser
-                'f3' => false,
-                'f6' => false,
-                'f9' => false,
-                'ctrlH' => false,
-                'ctrlL' => false,
-                'ctrlK' => false,
-                'ctrlO' => false,
-                'altD' => false,
-                
-                // Save/print/view
-                'ctrlS' => false,
-                'ctrlU' => false,
-                'ctrlP' => false,
-            ),
+        );
+        
+        $default_keyboard = array(
+            // Developer tools
+            'f12' => false,
+            'devTools' => false,
+            
+            // Selection/editing
+            'ctrlA' => false,
+            'ctrlC' => false,
+            'ctrlV' => false,
+            'ctrlX' => false,
+            'ctrlF' => false,
+            
+            // Navigation/browser
+            'f3' => false,
+            'f6' => false,
+            'f9' => false,
+            'ctrlH' => false,
+            'ctrlL' => false,
+            'ctrlK' => false,
+            'ctrlO' => false,
+            'altD' => false,
+            
+            // Save/print/view
+            'ctrlS' => false,
+            'ctrlU' => false,
+            'ctrlP' => false,
         );
 
         $default_image = array(
@@ -131,6 +171,7 @@ class CopyProtect_Admin {
             'showTooltip' => false,
             'showModal' => false,
             'showProtectedBadge' => false,
+            'badgePosition' => 'bottom-right',
         );
 
         $default_messages = array(
@@ -145,11 +186,13 @@ class CopyProtect_Admin {
             'applyToPages' => false,
             'applyToProducts' => false,
             'disableForCategories' => false,
+            'disabledCategories' => array(),
         );
 
         // Get saved options
         $general_settings = get_option('copyprotect_general_settings', $default_general);
         $text_settings = get_option('copyprotect_text_settings', $default_text);
+        $keyboard_settings = get_option('copyprotect_keyboard_settings', $default_keyboard);
         $image_settings = get_option('copyprotect_image_settings', $default_image);
         $js_settings = get_option('copyprotect_js_settings', $default_js);
         $appearance_settings = get_option('copyprotect_appearance_settings', $default_appearance);

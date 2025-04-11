@@ -1,16 +1,21 @@
 
 /**
- * Admin styles
+ * Admin styles for CopyProtect
  */
 .copyprotect-admin {
     max-width: 1200px;
     margin: 20px auto;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
 }
 
 .copyprotect-admin h1 {
-    color: #23282d;
+    color: #fff;
     font-size: 24px;
     margin-bottom: 10px;
+    background-image: linear-gradient(to right, #2D2D2D, rgba(0, 115, 230, 0.9));
+    padding: 0.75rem;
+    border-radius: 4px;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
 }
 
 /* Tabs */
@@ -18,24 +23,43 @@
     margin-top: 20px;
     background: #fff;
     border: 1px solid #ccd0d4;
-    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.04);
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
     border-radius: 4px;
     overflow: hidden;
 }
 
 .nav-tab-wrapper {
+    display: flex;
     background: #f9f9f9;
     border-bottom: 1px solid #ccd0d4;
+    padding: 0;
+    margin: 0;
 }
 
 .nav-tab {
-    margin-bottom: -1px;
+    margin: 0;
+    padding: 10px 15px;
     font-size: 14px;
+    border: none;
+    border-bottom: 3px solid transparent;
+    background: transparent;
+    color: #444;
+    text-decoration: none;
+    outline: none;
+    cursor: pointer;
 }
 
-.nav-tab-active, .nav-tab-active:focus, .nav-tab-active:focus:active, .nav-tab-active:hover {
-    border-bottom: 1px solid #fff;
-    background: #fff;
+.nav-tab:hover {
+    background-color: #f0f0f0;
+}
+
+.nav-tab-active, 
+.nav-tab-active:focus, 
+.nav-tab-active:focus:active, 
+.nav-tab-active:hover {
+    background-image: linear-gradient(to right, #2D2D2D, rgba(0, 115, 230, 0.9));
+    color: #fff;
+    border-bottom-color: #2D2D2D;
 }
 
 /* Tab content */
@@ -55,7 +79,7 @@
 .card {
     background: #fff;
     border: 1px solid #e5e5e5;
-    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.04);
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
     margin-bottom: 20px;
     padding: 20px;
     border-radius: 3px;
@@ -197,7 +221,7 @@ input:disabled + .slider {
 
 .help-item .dashicons {
     margin-right: 8px;
-    color: #e63238;
+    color: #8B0016;
 }
 
 /* FAQ section */
@@ -220,9 +244,54 @@ input:disabled + .slider {
     margin-top: 5px;
 }
 
+/* Preview elements */
+.preview-container {
+    background: #f9f9f9;
+    border: 1px solid #e5e5e5; 
+    padding: 15px;
+    border-radius: 3px;
+    margin-top: 15px;
+}
+
+.preview-content {
+    position: relative;
+    border: 1px solid #e0e0e0;
+    height: 150px;
+    background: white;
+    border-radius: 3px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 10px;
+}
+
+.preview-badge {
+    position: absolute;
+    background: linear-gradient(to right, rgba(139, 0, 22, 0.1), rgba(204, 0, 0, 0.1));
+    color: #8B0016;
+    font-size: 12px;
+    padding: 3px 8px;
+    border-radius: 3px;
+    display: flex;
+    align-items: center;
+    border: 1px solid rgba(139, 0, 22, 0.2);
+}
+
+.preview-badge-icon {
+    margin-right: 5px;
+    width: 12px;
+    height: 12px;
+}
+
+/* Fix for jQuery migrate warnings */
+.copyprotect-admin .nav-tab-wrapper a {
+    cursor: pointer;
+}
+
 /* Category checkboxes */
-.category-selection {
-    margin: 15px 0 0 15px;
+.category-selection,
+.post-type-selection {
+    margin: 15px 0;
     padding: 15px;
     background: #f9f9f9;
     border: 1px solid #e5e5e5;
@@ -234,26 +303,85 @@ input:disabled + .slider {
     margin-bottom: 8px;
 }
 
-/* Updated styles for active tab highlighting */
-.nav-tab-active, 
-.nav-tab-active:focus, 
-.nav-tab-active:focus:active, 
-.nav-tab-active:hover {
-    background: linear-gradient(to right, #2D2D2D, rgba(0, 115, 230, 0.9));
+/* Modal and tooltip styles */
+.copyprotect-tooltip {
+    position: absolute;
+    background: #333;
     color: #fff;
-    border-color: #2D2D2D;
+    padding: 5px 10px;
+    border-radius: 3px;
+    font-size: 12px;
+    z-index: 100;
+    max-width: 200px;
+    text-align: center;
 }
 
-/* Shadow for cards */
-.card {
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
+.copyprotect-tooltip:after {
+    content: '';
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    margin-left: -5px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: #333 transparent transparent transparent;
 }
 
-/* Header styling */
-.copyprotect-admin h1 {
-    background: linear-gradient(to right, #2D2D2D, rgba(0, 115, 230, 0.9));
+.copyprotect-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.7);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+}
+
+.copyprotect-modal-content {
+    background: #fff;
+    padding: 20px;
+    border-radius: 5px;
+    max-width: 500px;
+    text-align: center;
+}
+
+.copyprotect-modal-close {
+    margin-top: 15px;
+    padding: 5px 15px;
+    background: #0073e6;
     color: #fff;
-    padding: 0.75rem;
-    border-radius: 4px;
-    margin-bottom: 20px;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+}
+
+/* Add proper specificity for WordPress admin */
+#wpbody-content .copyprotect-admin .nav-tab-wrapper {
+    padding-top: 0;
+}
+
+/* Page exclusions */
+.excluded-item {
+    display: inline-flex;
+    align-items: center;
+    background: #f0f0f0;
+    border: 1px solid #ddd;
+    border-radius: 3px;
+    padding: 3px 8px;
+    margin: 0 5px 5px 0;
+    font-size: 13px;
+}
+
+.excluded-item-remove {
+    margin-left: 5px;
+    cursor: pointer;
+    color: #cc0000;
+    border: none;
+    background: transparent;
+    padding: 0;
+    font-size: 16px;
+    line-height: 1;
 }

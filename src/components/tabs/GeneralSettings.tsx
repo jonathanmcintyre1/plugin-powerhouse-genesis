@@ -5,6 +5,8 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { XCircle } from 'lucide-react';
 
 interface GeneralSettingsProps {
   settings: {
@@ -12,11 +14,45 @@ interface GeneralSettingsProps {
     showFrontendNotice: boolean;
     disableForLoggedIn: boolean;
     compatibilityMode: boolean;
+    excludedPages: any[];
   };
-  updateSettings: (key: string, value: boolean) => void;
+  updateSettings: (key: string, value: any) => void;
 }
 
 const GeneralSettings: React.FC<GeneralSettingsProps> = ({ settings, updateSettings }) => {
+  // Mock data for WordPress pages - in reality this would be pulled from the server
+  const sitePages = [
+    { id: 1, title: 'Home' },
+    { id: 2, title: 'About Us' },
+    { id: 3, title: 'Contact' },
+    { id: 4, title: 'Blog' },
+    { id: 5, title: 'Privacy Policy' },
+    { id: 6, title: 'Terms of Service' },
+  ];
+  
+  const [selectedPageId, setSelectedPageId] = React.useState<string>('');
+  
+  const addExcludedPage = () => {
+    if (!selectedPageId) return;
+    
+    const pageId = parseInt(selectedPageId);
+    const pageExists = settings.excludedPages.some(page => page.id === pageId);
+    
+    if (!pageExists) {
+      const page = sitePages.find(p => p.id === pageId);
+      if (page) {
+        const newExcludedPages = [...settings.excludedPages, page];
+        updateSettings('excludedPages', newExcludedPages);
+        setSelectedPageId('');
+      }
+    }
+  };
+  
+  const removeExcludedPage = (pageId: number) => {
+    const newExcludedPages = settings.excludedPages.filter(page => page.id !== pageId);
+    updateSettings('excludedPages', newExcludedPages);
+  };
+  
   return (
     <div className="space-y-6">
       <Card>
@@ -66,43 +102,62 @@ const GeneralSettings: React.FC<GeneralSettingsProps> = ({ settings, updateSetti
 
       <Card>
         <CardHeader>
-          <CardTitle>Exclusion Rules</CardTitle>
+          <CardTitle>Page Exclusion Rules</CardTitle>
           <CardDescription>
-            Exclude specific pages or posts from protection
+            Select specific pages or posts to exclude from protection
           </CardDescription>
         </CardHeader>
         <CardContent>
           <div className="space-y-4">
             <div>
-              <label className="text-sm font-medium">Excluded Pages/Posts</label>
-              <div className="flex mt-2">
-                <Input 
-                  placeholder="Enter page IDs (e.g. 1, 4, 15)" 
-                  className="flex-1 mr-2"
+              <label className="text-sm font-medium block mb-2">Select Page to Exclude</label>
+              <div className="flex">
+                <Select 
+                  value={selectedPageId} 
+                  onValueChange={setSelectedPageId}
                   disabled={!settings.enableProtection}
-                />
+                >
+                  <SelectTrigger className="flex-1 mr-2">
+                    <SelectValue placeholder="Select a page to exclude" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {sitePages.map(page => (
+                      <SelectItem key={page.id} value={page.id.toString()}>
+                        {page.title}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
                 <Button 
                   variant="outline"
-                  disabled={!settings.enableProtection}
+                  onClick={addExcludedPage}
+                  disabled={!settings.enableProtection || !selectedPageId}
                 >
                   Add
                 </Button>
               </div>
             </div>
             
-            <div className="flex flex-wrap gap-2 mt-3">
-              <Badge variant="outline" className="flex items-center gap-1">
-                Home Page
-                <button className="ml-1 text-gray-500 hover:text-gray-700">×</button>
-              </Badge>
-              <Badge variant="outline" className="flex items-center gap-1">
-                Contact (ID: 12)
-                <button className="ml-1 text-gray-500 hover:text-gray-700">×</button>
-              </Badge>
-              <Badge variant="outline" className="flex items-center gap-1">
-                Privacy Policy
-                <button className="ml-1 text-gray-500 hover:text-gray-700">×</button>
-              </Badge>
+            <div>
+              <label className="text-sm font-medium block mb-2">Excluded Pages</label>
+              {settings.excludedPages.length === 0 ? (
+                <div className="text-sm text-gray-500 italic">No pages excluded. Protection will apply to all content.</div>
+              ) : (
+                <div className="flex flex-wrap gap-2 mt-3">
+                  {settings.excludedPages.map(page => (
+                    <Badge key={page.id} variant="outline" className="flex items-center gap-1">
+                      {page.title} (ID: {page.id})
+                      <button 
+                        className="ml-1 text-gray-500 hover:text-[#8B0016]"
+                        onClick={() => removeExcludedPage(page.id)}
+                        type="button"
+                      >
+                        <XCircle className="h-3.5 w-3.5" />
+                      </button>
+                    </Badge>
+                  ))}
+                </div>
+              )}
             </div>
           </div>
         </CardContent>
