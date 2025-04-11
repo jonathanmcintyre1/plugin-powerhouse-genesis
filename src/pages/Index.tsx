@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import Header from '@/components/Header';
 import TabNavigation from '@/components/TabNavigation';
@@ -40,6 +39,20 @@ const Index = () => {
       f12: true,
     },
   });
+  
+  // Update nested text settings (keyboard shortcuts)
+  const updateKeyboardShortcuts = (parent: string, key: string, value: boolean) => {
+    if (parent === 'keyboardShortcuts') {
+      setTextSettings(prev => ({
+        ...prev,
+        [parent]: {
+          ...prev[parent],
+          [key]: value,
+        },
+      }));
+      setHasChanges(true);
+    }
+  };
   
   // Image protection settings
   const [imageSettings, setImageSettings] = useState({
@@ -91,18 +104,6 @@ const Index = () => {
   // Update text protection settings
   const updateTextSettings = (key: string, value: boolean) => {
     setTextSettings(prev => ({ ...prev, [key]: value }));
-    setHasChanges(true);
-  };
-  
-  // Update nested text settings (keyboard shortcuts)
-  const updateKeyboardShortcuts = (parent: string, key: string, value: boolean) => {
-    setTextSettings(prev => ({
-      ...prev,
-      [parent]: {
-        ...prev[parent as keyof typeof prev],
-        [key]: value,
-      },
-    }));
     setHasChanges(true);
   };
   

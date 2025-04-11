@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 import SwitchGroup from '../ui/switch-group';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { MessageSquare, AlertTriangle, Badge as BadgeIcon } from 'lucide-react';
+import { MessageSquare, AlertTriangle, Badge as BadgeIcon, Shield } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
