@@ -35,9 +35,9 @@ const AppearanceMessaging: React.FC<AppearanceMessagingProps> = ({
   return (
     <div className="space-y-6">
       <Card className="border-[#e0e0e0] shadow-sm hover:shadow-md transition-shadow duration-300">
-        <CardHeader className="bg-gradient-to-r from-[#6a11cb]/5 to-[#2575fc]/5">
+        <CardHeader className="bg-gradient-to-r from-[#8B0016]/5 to-[#CC0000]/5">
           <CardTitle className="flex items-center">
-            <MessageSquare className="h-5 w-5 text-[#6a11cb] mr-2" />
+            <MessageSquare className="h-5 w-5 text-[#8B0016] mr-2" />
             User Notifications
           </CardTitle>
           <CardDescription>
@@ -61,7 +61,7 @@ const AppearanceMessaging: React.FC<AppearanceMessagingProps> = ({
                 placeholder="Content is protected"
                 value={messages.tooltipText}
                 onChange={(e) => updateMessages('tooltipText', e.target.value)}
-                className="mt-1 border-[#e0e0e0] focus-visible:ring-[#2575fc]"
+                className="mt-1 border-[#e0e0e0] focus-visible:ring-[#CC0000]"
               />
             </div>
           )}
@@ -82,7 +82,7 @@ const AppearanceMessaging: React.FC<AppearanceMessagingProps> = ({
                 placeholder="This content is protected. Copying is not allowed."
                 value={messages.alertText}
                 onChange={(e) => updateMessages('alertText', e.target.value)}
-                className="mt-1 border-[#e0e0e0] focus-visible:ring-[#2575fc]"
+                className="mt-1 border-[#e0e0e0] focus-visible:ring-[#CC0000]"
                 rows={3}
               />
             </div>
@@ -91,9 +91,9 @@ const AppearanceMessaging: React.FC<AppearanceMessagingProps> = ({
       </Card>
 
       <Card className="border-[#e0e0e0] shadow-sm hover:shadow-md transition-shadow duration-300">
-        <CardHeader className="bg-gradient-to-r from-[#6a11cb]/5 to-[#2575fc]/5">
+        <CardHeader className="bg-gradient-to-r from-[#8B0016]/5 to-[#CC0000]/5">
           <CardTitle className="flex items-center">
-            <BadgeIcon className="h-5 w-5 text-[#6a11cb] mr-2" />
+            <BadgeIcon className="h-5 w-5 text-[#8B0016] mr-2" />
             Protection Indicators
           </CardTitle>
           <CardDescription>
@@ -118,14 +118,14 @@ const AppearanceMessaging: React.FC<AppearanceMessagingProps> = ({
                   placeholder="Protected"
                   value={messages.badgeText}
                   onChange={(e) => updateMessages('badgeText', e.target.value)}
-                  className="mt-1 border-[#e0e0e0] focus-visible:ring-[#2575fc]"
+                  className="mt-1 border-[#e0e0e0] focus-visible:ring-[#CC0000]"
                 />
               </div>
               
               <div>
                 <Label htmlFor="badge-position" className="text-sm font-medium">Badge Position</Label>
                 <Select value={badgePosition} onValueChange={setBadgePosition}>
-                  <SelectTrigger id="badge-position" className="mt-1 border-[#e0e0e0] focus-visible:ring-[#2575fc]">
+                  <SelectTrigger id="badge-position" className="mt-1 border-[#e0e0e0] focus-visible:ring-[#CC0000]">
                     <SelectValue placeholder="Select position" />
                   </SelectTrigger>
                   <SelectContent>
@@ -148,7 +148,7 @@ const AppearanceMessaging: React.FC<AppearanceMessagingProps> = ({
                   }`}>
                     <Badge 
                       variant="outline" 
-                      className="bg-gradient-to-r from-[#6a11cb]/10 to-[#2575fc]/10 text-[#2575fc] border border-[#2575fc]/20 flex items-center gap-1"
+                      className="bg-gradient-to-r from-[#8B0016]/10 to-[#CC0000]/10 text-[#CC0000] border border-[#CC0000]/20 flex items-center gap-1"
                     >
                       <Lock className="h-3 w-3" />
                       {messages.badgeText || 'Protected'}

@@ -68,7 +68,7 @@ const TextProtection: React.FC<TextProtectionProps> = ({
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
           <div>
             <CardTitle className="flex items-center">
-              <KeyRound className="h-5 w-5 text-purple-600 mr-2" />
+              <KeyRound className="h-5 w-5 text-[#8B0016] mr-2" />
               Keyboard Shortcuts Protection
             </CardTitle>
             <CardDescription>

@@ -46,7 +46,7 @@ const SaveChanges: React.FC<SaveChangesProps> = ({
         onClick={handleSave}
         disabled={isSaving || !hasChanges}
         className={cn(
-          "bg-gradient-to-r from-[#6a11cb] to-[#2575fc] hover:from-[#5b0fb3] hover:to-[#1e68e6] transition-all duration-200 hover:shadow-md",
+          "bg-gradient-to-r from-[#8B0016] to-[#CC0000] hover:from-[#7A0014] hover:to-[#B80000] transition-all duration-200 hover:shadow-md",
           isSaving ? "opacity-80" : "",
           "transform hover:scale-[1.02] active:scale-[0.98]"
         )}

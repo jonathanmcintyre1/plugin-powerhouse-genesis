@@ -22,7 +22,7 @@ const JavaScriptBehavior: React.FC<JavaScriptBehaviorProps> = ({ settings, updat
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center">
-            <Code className="h-5 w-5 text-purple-600 mr-2" />
+            <Code className="h-5 w-5 text-[#8B0016] mr-2" />
             Browser Interaction Controls
           </CardTitle>
           <CardDescription>
@@ -67,7 +67,7 @@ const JavaScriptBehavior: React.FC<JavaScriptBehaviorProps> = ({ settings, updat
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center">
-            <Shield className="h-5 w-5 text-purple-600 mr-2" />
+            <Shield className="h-5 w-5 text-[#8B0016] mr-2" />
             Advanced Protection
           </CardTitle>
           <CardDescription>

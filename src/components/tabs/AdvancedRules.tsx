@@ -58,7 +58,7 @@ const AdvancedRules: React.FC<AdvancedRulesProps> = ({ settings, updateSettings 
             <Card>
               <CardHeader>
                 <CardTitle className="flex items-center">
-                  <FileText className="h-5 w-5 text-purple-600 mr-2" />
+                  <FileText className="h-5 w-5 text-[#8B0016] mr-2" />
                   Blog Posts Protection
                 </CardTitle>
                 <CardDescription>
@@ -110,7 +110,7 @@ const AdvancedRules: React.FC<AdvancedRulesProps> = ({ settings, updateSettings 
             <Card>
               <CardHeader>
                 <CardTitle className="flex items-center">
-                  <FileText className="h-5 w-5 text-purple-600 mr-2" />
+                  <FileText className="h-5 w-5 text-[#8B0016] mr-2" />
                   Pages Protection
                 </CardTitle>
                 <CardDescription>
@@ -133,7 +133,7 @@ const AdvancedRules: React.FC<AdvancedRulesProps> = ({ settings, updateSettings 
             <Card>
               <CardHeader>
                 <CardTitle className="flex items-center">
-                  <ShoppingCart className="h-5 w-5 text-purple-600 mr-2" />
+                  <ShoppingCart className="h-5 w-5 text-[#8B0016] mr-2" />
                   WooCommerce Products
                 </CardTitle>
                 <CardDescription>

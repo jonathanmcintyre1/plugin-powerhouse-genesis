@@ -26,7 +26,7 @@ const SwitchGroup: React.FC<SwitchGroupProps> = ({
   return (
     <div className={cn("flex flex-row items-center justify-between space-x-4 rounded-lg border p-4 transition-all duration-200", 
       checked 
-        ? "bg-gradient-to-r from-[#6a11cb]/10 to-[#2575fc]/10 border-[#2575fc]/20" 
+        ? "bg-gradient-to-r from-[#8B0016]/10 to-[#CC0000]/10 border-[#CC0000]/20" 
         : "bg-white border-[#e0e0e0] hover:border-[#d0d0d0]",
       className
     )}>
@@ -45,7 +45,7 @@ const SwitchGroup: React.FC<SwitchGroupProps> = ({
         disabled={disabled}
         className={cn(
           "transition-all duration-200",
-          checked ? "bg-gradient-to-r from-[#6a11cb] to-[#2575fc]" : "bg-gray-200"
+          checked ? "bg-gradient-to-r from-[#8B0016] to-[#CC0000]" : "bg-gray-200"
         )}
       />
     </div>

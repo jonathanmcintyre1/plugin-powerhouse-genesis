@@ -22,7 +22,7 @@ const ImageProtection: React.FC<ImageProtectionProps> = ({ settings, updateSetti
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center">
-            <ImageIcon className="h-5 w-5 text-purple-600 mr-2" />
+            <ImageIcon className="h-5 w-5 text-[#8B0016] mr-2" />
             Image Interaction Protection
           </CardTitle>
           <CardDescription>
@@ -51,7 +51,7 @@ const ImageProtection: React.FC<ImageProtectionProps> = ({ settings, updateSetti
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center">
-            <Layers className="h-5 w-5 text-purple-600 mr-2" />
+            <Layers className="h-5 w-5 text-[#8B0016] mr-2" />
             Image Source Protection
           </CardTitle>
           <CardDescription>
