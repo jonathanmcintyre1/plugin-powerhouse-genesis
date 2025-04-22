@@ -14,13 +14,19 @@ class CopyProtect_Admin {
      * Register the stylesheets for the admin area.
      */
     public function enqueue_styles() {
+        // Enqueue the main admin CSS
         wp_enqueue_style('copyprotect-admin', COPYPROTECT_PLUGIN_URL . 'admin/css/copyprotect-admin.css', array(), COPYPROTECT_VERSION, 'all');
+        
+        // Add WordPress default admin styles for consistency
+        wp_enqueue_style('wp-admin');
+        wp_enqueue_style('wp-components');
     }
 
     /**
      * Register the JavaScript for the admin area.
      */
     public function enqueue_scripts() {
+        wp_enqueue_script('jquery');
         wp_enqueue_script('copyprotect-admin', COPYPROTECT_PLUGIN_URL . 'admin/js/copyprotect-admin.js', array('jquery'), COPYPROTECT_VERSION, false);
         
         // Pass data to admin JS

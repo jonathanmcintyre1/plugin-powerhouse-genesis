@@ -36,6 +36,7 @@ class CopyProtect {
     private function define_admin_hooks() {
         $plugin_admin = new CopyProtect_Admin();
         
+        // Make sure these hooks are called on admin_enqueue_scripts
         $this->loader->add_action('admin_enqueue_scripts', $plugin_admin, 'enqueue_styles');
         $this->loader->add_action('admin_enqueue_scripts', $plugin_admin, 'enqueue_scripts');
         $this->loader->add_action('admin_menu', $plugin_admin, 'add_options_page');
