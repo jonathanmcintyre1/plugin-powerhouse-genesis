@@ -42,7 +42,15 @@ function run_copyprotect() {
     $plugin = new CopyProtect();
     $plugin->run();
 }
-run_copyprotect();
+
+/**
+ * Hook to plugins_loaded to ensure WordPress core functions are available
+ */
+function copyprotect_init() {
+    // Instantiate the plugin when WordPress has fully loaded
+    run_copyprotect();
+}
+add_action('plugins_loaded', 'copyprotect_init', 15); // Higher priority (15) ensures it runs after most plugins
 
 /**
  * Activation hook
@@ -68,14 +76,10 @@ function copyprotect_activate() {
         add_option('copyprotect_text_settings', $default_text);
     }
     
-    // Add more default settings as needed
-    
     // Clear any cached data
     if (function_exists('wp_cache_flush')) {
         wp_cache_flush();
     }
-    
-    // Maybe create custom database tables or perform other setup tasks
 }
 register_activation_hook(__FILE__, 'copyprotect_activate');
 
@@ -84,10 +88,6 @@ register_activation_hook(__FILE__, 'copyprotect_activate');
  */
 function copyprotect_deactivate() {
     // Clean up temporary data if needed
-    
-    // Note: We typically don't delete options on deactivation,
-    // as users often expect their settings to persist when they
-    // reactivate the plugin
 }
 register_deactivation_hook(__FILE__, 'copyprotect_deactivate');
 
