@@ -40,11 +40,28 @@ if (!is_dir($dist_dir)) {
 
 // Copy JS assets
 echo "Copying JS assets...\n";
-if (file_exists("$dist_dir/assets/index.js")) {
-    file_put_contents("$admin_js_dir/copyprotect-admin.js", file_get_contents("$dist_dir/assets/index.js"));
-    echo "Admin JS copied successfully.\n";
+$js_files = glob("$dist_dir/assets/*.js");
+if (!empty($js_files)) {
+    // Find the main JS file
+    $main_js = '';
+    foreach ($js_files as $file) {
+        if (strpos($file, 'index') !== false) {
+            $main_js = $file;
+            break;
+        }
+    }
+    
+    // If we found a main JS file, copy it
+    if ($main_js) {
+        file_put_contents("$admin_js_dir/copyprotect-admin.js", file_get_contents($main_js));
+        echo "Admin JS copied successfully.\n";
+    } else {
+        // Just copy the first JS file if we can't identify the main one
+        file_put_contents("$admin_js_dir/copyprotect-admin.js", file_get_contents($js_files[0]));
+        echo "Admin JS copied (using first available JS file).\n";
+    }
 } else {
-    echo "Warning: Admin JS file not found in build output.\n";
+    echo "Warning: No JS files found in build output.\n";
 }
 
 // Copy CSS assets
@@ -54,7 +71,26 @@ if (!empty($css_files)) {
     file_put_contents("$admin_css_dir/copyprotect-admin.css", file_get_contents($css_files[0]));
     echo "Admin CSS copied successfully.\n";
 } else {
-    echo "Warning: Admin CSS file not found in build output.\n";
+    echo "Warning: No CSS files found in build output.\n";
+}
+
+// Copy asset files (images, fonts, etc.)
+echo "Copying other assets...\n";
+$asset_files = array_merge(
+    glob("$dist_dir/assets/*.{png,jpg,jpeg,gif,svg}", GLOB_BRACE),
+    glob("$dist_dir/assets/*.{woff,woff2,ttf,eot}", GLOB_BRACE)
+);
+
+if (!empty($asset_files)) {
+    if (!is_dir("$admin_css_dir/assets")) {
+        mkdir("$admin_css_dir/assets", 0755, true);
+    }
+    
+    foreach ($asset_files as $asset) {
+        $filename = basename($asset);
+        copy($asset, "$admin_css_dir/assets/$filename");
+    }
+    echo "Other assets copied successfully.\n";
 }
 
 // Create public JS file if it doesn't exist

@@ -15,6 +15,14 @@ class CopyProtect_Admin {
      */
     public function __construct() {
         // Constructor can be extended as needed
+        add_action('admin_enqueue_scripts', array($this, 'enqueue_styles'));
+        add_action('admin_enqueue_scripts', array($this, 'enqueue_scripts'));
+        add_action('admin_menu', array($this, 'add_options_page'));
+        add_filter('plugin_action_links_' . plugin_basename(COPYPROTECT_PLUGIN_DIR . 'copyprotect.php'), array($this, 'add_action_links'));
+        add_action('admin_init', array($this, 'register_settings'));
+        
+        // Add AJAX handlers for saving settings
+        add_action('wp_ajax_copyprotect_save_settings', array($this, 'ajax_save_settings'));
     }
 
     /**
@@ -22,7 +30,12 @@ class CopyProtect_Admin {
      *
      * @since    1.0.0
      */
-    public function enqueue_styles() {
+    public function enqueue_styles($hook) {
+        // Only load on our plugin page
+        if ('toplevel_page_copyprotect' !== $hook) {
+            return;
+        }
+        
         // Enqueue the main admin CSS with version for cache busting
         wp_enqueue_style(
             'copyprotect-admin', 
@@ -31,10 +44,6 @@ class CopyProtect_Admin {
             COPYPROTECT_VERSION, 
             'all'
         );
-        
-        // Add WordPress default admin styles for consistency
-        wp_enqueue_style('wp-admin');
-        wp_enqueue_style('wp-components');
     }
 
     /**
@@ -42,23 +51,19 @@ class CopyProtect_Admin {
      *
      * @since    1.0.0
      */
-    public function enqueue_scripts() {
-        wp_enqueue_script('jquery');
+    public function enqueue_scripts($hook) {
+        // Only load on our plugin page
+        if ('toplevel_page_copyprotect' !== $hook) {
+            return;
+        }
         
         wp_enqueue_script(
             'copyprotect-admin', 
             COPYPROTECT_PLUGIN_URL . 'admin/js/copyprotect-admin.js', 
             array('jquery'), 
             COPYPROTECT_VERSION, 
-            false
+            true
         );
-        
-        // Pass data to admin JS with proper nonce for security
-        wp_localize_script('copyprotect-admin', 'copyprotectAdmin', array(
-            'ajaxurl' => admin_url('admin-ajax.php'),
-            'nonce' => wp_create_nonce('copyprotect-admin-nonce'),
-            'pages' => $this->get_pages_for_dropdown(),
-        ));
     }
     
     /**
@@ -373,6 +378,58 @@ class CopyProtect_Admin {
     }
 
     /**
+     * AJAX handler for saving settings
+     */
+    public function ajax_save_settings() {
+        // Check nonce for security
+        if (!check_ajax_referer('copyprotect-admin-nonce', 'nonce', false)) {
+            wp_send_json_error('Invalid security token');
+            return;
+        }
+        
+        // Check user capabilities
+        if (!current_user_can('manage_options')) {
+            wp_send_json_error('Insufficient permissions');
+            return;
+        }
+        
+        $settings_type = isset($_POST['settings_type']) ? sanitize_text_field($_POST['settings_type']) : '';
+        $settings = isset($_POST['settings']) ? json_decode(stripslashes($_POST['settings']), true) : array();
+        
+        if (empty($settings_type) || !is_array($settings)) {
+            wp_send_json_error('Invalid data format');
+            return;
+        }
+        
+        $option_name = 'copyprotect_' . $settings_type;
+        $sanitize_method = 'sanitize_' . $settings_type;
+        
+        // Sanitize settings using the appropriate method if it exists
+        if (method_exists($this, $sanitize_method)) {
+            $sanitized_settings = call_user_func(array($this, $sanitize_method), $settings);
+        } else {
+            // Basic sanitization fallback
+            $sanitized_settings = array();
+            foreach ($settings as $key => $value) {
+                if (is_bool($value)) {
+                    $sanitized_settings[$key] = (bool) $value;
+                } elseif (is_numeric($value)) {
+                    $sanitized_settings[$key] = absint($value);
+                } elseif (is_string($value)) {
+                    $sanitized_settings[$key] = sanitize_text_field($value);
+                } elseif (is_array($value)) {
+                    $sanitized_settings[$key] = array_map('sanitize_text_field', $value);
+                }
+            }
+        }
+        
+        // Update the option in the database
+        update_option($option_name, $sanitized_settings);
+        
+        wp_send_json_success('Settings saved successfully');
+    }
+
+    /**
      * Display the options page content with proper nonce security
      *
      * @since    1.0.0
@@ -383,98 +440,6 @@ class CopyProtect_Admin {
             wp_die(esc_html__('You do not have sufficient permissions to access this page.', 'copyprotect'));
         }
         
-        // Default values for options (all disabled by default)
-        $default_general = array(
-            'enableProtection' => false,
-            'showFrontendNotice' => false,
-            'disableForLoggedIn' => false,
-            'compatibilityMode' => false,
-            'excludedPages' => '',
-        );
-
-        $default_text = array(
-            'disableRightClick' => false,
-            'disableTextSelection' => false,
-            'disableDragDrop' => false,
-        );
-        
-        $default_keyboard = array(
-            // Developer tools
-            'f12' => false,
-            'devTools' => false,
-            
-            // Selection/editing
-            'ctrlA' => false,
-            'ctrlC' => false,
-            'ctrlV' => false,
-            'ctrlX' => false,
-            'ctrlF' => false,
-            
-            // Navigation/browser
-            'f3' => false,
-            'f6' => false,
-            'f9' => false,
-            'ctrlH' => false,
-            'ctrlL' => false,
-            'ctrlK' => false,
-            'ctrlO' => false,
-            'altD' => false,
-            
-            // Save/print/view
-            'ctrlS' => false,
-            'ctrlU' => false,
-            'ctrlP' => false,
-        );
-
-        $default_image = array(
-            'disableRightClickImages' => false,
-            'disableDraggingImages' => false,
-            'transparentOverlay' => false,
-            'serveCssBackground' => false,
-            'preventHotlinking' => false,
-            'lazyLoadWithObfuscation' => false,
-        );
-
-        $default_js = array(
-            'disablePrint' => false,
-            'disableViewSource' => false,
-            'obfuscateHtml' => false,
-            'disablePageRefresh' => false,
-            'antiInspectTool' => false,
-        );
-
-        $default_appearance = array(
-            'showTooltip' => false,
-            'showModal' => false,
-            'showProtectedBadge' => false,
-            'badgePosition' => 'bottom-right',
-        );
-
-        $default_messages = array(
-            'tooltipText' => 'Content is protected',
-            'alertText' => 'This content is protected. Copying is not allowed.',
-            'badgeText' => 'Protected',
-        );
-
-        $default_advanced = array(
-            'enablePerPostType' => false,
-            'applyToBlogPosts' => false,
-            'applyToPages' => false,
-            'applyToProducts' => false,
-            'disableForCategories' => false,
-            'disabledCategories' => array(),
-        );
-
-        // Get saved options
-        $general_settings = get_option('copyprotect_general_settings', $default_general);
-        $text_settings = get_option('copyprotect_text_settings', $default_text);
-        $keyboard_settings = get_option('copyprotect_keyboard_settings', $default_keyboard);
-        $image_settings = get_option('copyprotect_image_settings', $default_image);
-        $js_settings = get_option('copyprotect_js_settings', $default_js);
-        $appearance_settings = get_option('copyprotect_appearance_settings', $default_appearance);
-        $messages = get_option('copyprotect_messages', $default_messages);
-        $advanced_settings = get_option('copyprotect_advanced_settings', $default_advanced);
-
         // Include the template to display the settings
         include_once COPYPROTECT_PLUGIN_DIR . 'admin/partials/copyprotect-admin-display.php';
     }

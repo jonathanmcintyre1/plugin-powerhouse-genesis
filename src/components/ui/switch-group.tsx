@@ -1,8 +1,7 @@
 
 import React from 'react';
-import { Switch } from '@/components/ui/switch';
-import { Label } from '@/components/ui/label';
-import { cn } from '@/lib/utils';
+import { Switch } from "@/components/ui/switch";
+import { Label } from "@/components/ui/label";
 
 interface SwitchGroupProps {
   id: string;
@@ -11,7 +10,6 @@ interface SwitchGroupProps {
   checked: boolean;
   onCheckedChange: (checked: boolean) => void;
   disabled?: boolean;
-  className?: string;
 }
 
 const SwitchGroup: React.FC<SwitchGroupProps> = ({
@@ -20,22 +18,14 @@ const SwitchGroup: React.FC<SwitchGroupProps> = ({
   description,
   checked,
   onCheckedChange,
-  disabled = false,
-  className,
+  disabled = false
 }) => {
   return (
-    <div className={cn("flex flex-row items-center justify-between space-x-4 rounded-lg border p-4 transition-all duration-200", 
-      checked 
-        ? "bg-gradient-to-r from-[#8B0016]/10 to-[#CC0000]/10 border-[#CC0000]/20" 
-        : "bg-white border-[#e0e0e0] hover:border-[#d0d0d0]",
-      className
-    )}>
+    <div className="flex items-start justify-between gap-4 py-2">
       <div className="space-y-0.5">
-        <Label htmlFor={id} className="text-base font-medium text-[#333333]">
-          {label}
-        </Label>
+        <Label htmlFor={id} className="text-base">{label}</Label>
         {description && (
-          <p className="text-sm text-[#666666]">{description}</p>
+          <p className="text-sm text-muted-foreground">{description}</p>
         )}
       </div>
       <Switch
@@ -43,10 +33,6 @@ const SwitchGroup: React.FC<SwitchGroupProps> = ({
         checked={checked}
         onCheckedChange={onCheckedChange}
         disabled={disabled}
-        className={cn(
-          "transition-all duration-200",
-          checked ? "bg-gradient-to-r from-[#8B0016] to-[#CC0000]" : "bg-gray-200"
-        )}
       />
     </div>
   );
