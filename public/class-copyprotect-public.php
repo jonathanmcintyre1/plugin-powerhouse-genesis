@@ -1,66 +1,90 @@
-
 <?php
 /**
  * The public-facing functionality of the plugin.
+ *
+ * @since      1.0.0
+ * @package    CopyProtect
+ * @subpackage CopyProtect/public
  */
 class CopyProtect_Public {
 
     /**
      * Initialize the class and set its properties.
+     *
+     * @since    1.0.0
      */
     public function __construct() {}
 
     /**
      * Register the stylesheets for the public-facing side of the site.
+     *
+     * @since    1.0.0
      */
     public function enqueue_styles() {
-        wp_enqueue_style('copyprotect-public', COPYPROTECT_PLUGIN_URL . 'public/css/copyprotect-public.css', array(), COPYPROTECT_VERSION, 'all');
+        wp_enqueue_style(
+            'copyprotect-public', 
+            COPYPROTECT_PLUGIN_URL . 'public/css/copyprotect-public.css', 
+            array(), 
+            COPYPROTECT_VERSION, 
+            'all'
+        );
     }
 
     /**
      * Register the JavaScript for the public-facing side of the site.
+     *
+     * @since    1.0.0
      */
     public function enqueue_scripts() {
-        wp_enqueue_script('copyprotect-public', COPYPROTECT_PLUGIN_URL . 'public/js/copyprotect-public.js', array('jquery'), COPYPROTECT_VERSION, false);
+        wp_enqueue_script(
+            'copyprotect-public', 
+            COPYPROTECT_PLUGIN_URL . 'public/js/copyprotect-public.js', 
+            array('jquery'), 
+            COPYPROTECT_VERSION, 
+            true  // Load in footer for better performance
+        );
         
-        // Pass settings to JS
+        // Pass settings to JS with proper escaping
         $appearance_settings = get_option('copyprotect_appearance_settings', array());
         $messages = get_option('copyprotect_messages', array());
         
         wp_localize_script('copyprotect-public', 'copyprotectSettings', array(
-            'showTooltip' => isset($appearance_settings['showTooltip']) ? $appearance_settings['showTooltip'] : false,
-            'showModal' => isset($appearance_settings['showModal']) ? $appearance_settings['showModal'] : false,
-            'showProtectedBadge' => isset($appearance_settings['showProtectedBadge']) ? $appearance_settings['showProtectedBadge'] : false,
-            'tooltipText' => isset($messages['tooltipText']) ? $messages['tooltipText'] : 'Content is protected',
-            'alertText' => isset($messages['alertText']) ? $messages['alertText'] : 'This content is protected. Copying is not allowed.',
-            'badgeText' => isset($messages['badgeText']) ? $messages['badgeText'] : 'Protected',
-            'badgePosition' => isset($appearance_settings['badgePosition']) ? $appearance_settings['badgePosition'] : 'bottom-right',
+            'showTooltip' => isset($appearance_settings['showTooltip']) ? (bool) $appearance_settings['showTooltip'] : false,
+            'showModal' => isset($appearance_settings['showModal']) ? (bool) $appearance_settings['showModal'] : false,
+            'showProtectedBadge' => isset($appearance_settings['showProtectedBadge']) ? (bool) $appearance_settings['showProtectedBadge'] : false,
+            'tooltipText' => isset($messages['tooltipText']) ? esc_js($messages['tooltipText']) : esc_js(__('Content is protected', 'copyprotect')),
+            'alertText' => isset($messages['alertText']) ? esc_js($messages['alertText']) : esc_js(__('This content is protected. Copying is not allowed.', 'copyprotect')),
+            'badgeText' => isset($messages['badgeText']) ? esc_js($messages['badgeText']) : esc_js(__('Protected', 'copyprotect')),
+            'badgePosition' => isset($appearance_settings['badgePosition']) ? esc_js($appearance_settings['badgePosition']) : 'bottom-right',
         ));
     }
 
     /**
-     * Add protection scripts to wp_head
+     * Determine if protection should be applied based on settings and context
+     * 
+     * @since    1.0.0
+     * @return   bool    Whether protection should be applied
      */
-    public function add_protection_scripts() {
+    private function should_apply_protection() {
         // Get settings
         $general_settings = get_option('copyprotect_general_settings', array());
-        $text_settings = get_option('copyprotect_text_settings', array());
-        $image_settings = get_option('copyprotect_image_settings', array());
-        $js_settings = get_option('copyprotect_js_settings', array());
-        $keyboard_settings = get_option('copyprotect_keyboard_settings', array());
         $advanced_settings = get_option('copyprotect_advanced_settings', array());
         
-        // Check if we should apply protection
+        // Master switch check
         if (!isset($general_settings['enableProtection']) || !$general_settings['enableProtection']) {
-            return;
+            return false;
+        }
+        
+        // Check for logged-in user exclusion
+        if (isset($general_settings['disableForLoggedIn']) && $general_settings['disableForLoggedIn'] && is_user_logged_in()) {
+            return false;
         }
         
         // Check if current page should be excluded
-        $excluded_pages = isset($general_settings['excludedPages']) ? explode(',', $general_settings['excludedPages']) : array();
-        if (!empty($excluded_pages)) {
+        if (isset($general_settings['excludedPages']) && is_array($general_settings['excludedPages']) && !empty($general_settings['excludedPages'])) {
             global $post;
-            if ($post && in_array($post->ID, $excluded_pages)) {
-                return;
+            if ($post && in_array($post->ID, $general_settings['excludedPages'])) {
+                return false;
             }
         }
         
@@ -78,7 +102,7 @@ class CopyProtect_Public {
                 if (($post_type == 'post' && !$apply_to_posts) || 
                     ($post_type == 'page' && !$apply_to_pages) || 
                     ($post_type == 'product' && !$apply_to_products)) {
-                    return;
+                    return false;
                 }
                 
                 // Check categories if needed
@@ -88,12 +112,39 @@ class CopyProtect_Public {
                     
                     foreach ($post_categories as $cat_id) {
                         if (in_array($cat_id, $disabled_categories)) {
-                            return; // Skip protection for this post
+                            return false; // Skip protection for this post
                         }
                     }
                 }
             }
         }
+        
+        return true;
+    }
+
+    /**
+     * Add protection scripts to wp_head
+     * 
+     * @since    1.0.0
+     */
+    public function add_protection_scripts() {
+        // Check if protection should be applied
+        if (!$this->should_apply_protection()) {
+            return;
+        }
+        
+        // Get all needed settings
+        $text_settings = get_option('copyprotect_text_settings', array());
+        $image_settings = get_option('copyprotect_image_settings', array());
+        $js_settings = get_option('copyprotect_js_settings', array());
+        $keyboard_settings = get_option('copyprotect_keyboard_settings', array());
+        $appearance_settings = get_option('copyprotect_appearance_settings', array());
+        $messages = get_option('copyprotect_messages', array());
+        
+        // Safely get message text with defaults and escaping
+        $tooltip_text = isset($messages['tooltipText']) ? esc_js($messages['tooltipText']) : esc_js(__('Content is protected', 'copyprotect'));
+        $alert_text = isset($messages['alertText']) ? esc_js($messages['alertText']) : esc_js(__('This content is protected. Copying is not allowed.', 'copyprotect'));
+        $badge_text = isset($messages['badgeText']) ? esc_js($messages['badgeText']) : esc_js(__('Protected', 'copyprotect'));
         
         // Start building JavaScript protection code
         ?>
