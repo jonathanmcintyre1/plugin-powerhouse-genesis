@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Header from '@/components/Header';
 import TabNavigation from '@/components/TabNavigation';
 import GeneralSettings from '@/components/tabs/GeneralSettings';
@@ -11,14 +11,31 @@ import AdvancedRules from '@/components/tabs/AdvancedRules';
 import HelpSupport from '@/components/tabs/HelpSupport';
 import KeyboardShortcuts from '@/components/tabs/KeyboardShortcuts';
 import SaveChanges from '@/components/SaveChanges';
+import { toast } from '@/components/ui/use-toast';
 
-const Index = () => {
+interface IndexProps {
+  initialSettings?: {
+    generalSettings?: any;
+    textSettings?: any;
+    keyboardSettings?: any;
+    imageSettings?: any;
+    jsSettings?: any;
+    appearanceSettings?: any;
+    messages?: any;
+    advancedSettings?: any;
+    ajaxUrl?: string;
+    nonce?: string;
+    pluginUrl?: string;
+  };
+}
+
+const Index = ({ initialSettings = {} }: IndexProps) => {
   const [activeTab, setActiveTab] = useState('general');
   const [isSaving, setIsSaving] = useState(false);
   const [hasChanges, setHasChanges] = useState(false);
   
-  // General settings - all disabled by default
-  const [generalSettings, setGeneralSettings] = useState({
+  // Initialize settings from WordPress or use defaults
+  const [generalSettings, setGeneralSettings] = useState(initialSettings?.generalSettings || {
     enableProtection: false,
     showFrontendNotice: false,
     disableForLoggedIn: false,
@@ -26,27 +43,20 @@ const Index = () => {
     excludedPages: [],
   });
   
-  // Text protection settings - all disabled by default
-  const [textSettings, setTextSettings] = useState({
+  const [textSettings, setTextSettings] = useState(initialSettings?.textSettings || {
     disableRightClick: false,
     disableTextSelection: false,
     disableDragDrop: false,
   });
   
-  // Keyboard shortcuts settings - all disabled by default
-  const [keyboardSettings, setKeyboardSettings] = useState({
-    // Developer tools
+  const [keyboardSettings, setKeyboardSettings] = useState(initialSettings?.keyboardSettings || {
     f12: false,
     devTools: false,
-    
-    // Selection/editing
     ctrlA: false,
     ctrlC: false,
     ctrlV: false,
     ctrlX: false,
     ctrlF: false,
-    
-    // Navigation/browser
     f3: false,
     f6: false,
     f9: false,
@@ -55,15 +65,12 @@ const Index = () => {
     ctrlK: false,
     ctrlO: false,
     altD: false,
-    
-    // Save/print/view
     ctrlS: false,
     ctrlP: false,
     ctrlU: false,
   });
   
-  // Image protection settings - all disabled by default
-  const [imageSettings, setImageSettings] = useState({
+  const [imageSettings, setImageSettings] = useState(initialSettings?.imageSettings || {
     disableRightClickImages: false,
     disableDraggingImages: false,
     transparentOverlay: false,
@@ -72,8 +79,7 @@ const Index = () => {
     lazyLoadWithObfuscation: false,
   });
   
-  // JavaScript behavior settings - all disabled by default
-  const [jsSettings, setJsSettings] = useState({
+  const [jsSettings, setJsSettings] = useState(initialSettings?.jsSettings || {
     disablePrint: false,
     disableViewSource: false,
     obfuscateHtml: false,
@@ -81,22 +87,20 @@ const Index = () => {
     antiInspectTool: false,
   });
   
-  // Appearance & messaging settings - disabled by default
-  const [appearanceSettings, setAppearanceSettings] = useState({
+  const [appearanceSettings, setAppearanceSettings] = useState(initialSettings?.appearanceSettings || {
     showTooltip: false,
     showModal: false,
     showProtectedBadge: false,
     badgePosition: 'bottom-right',
   });
   
-  const [messages, setMessages] = useState({
+  const [messages, setMessages] = useState(initialSettings?.messages || {
     tooltipText: 'Content is protected',
     alertText: 'This content is protected. Copying is not allowed.',
     badgeText: 'Protected',
   });
   
-  // Advanced rules settings - all disabled by default
-  const [advancedSettings, setAdvancedSettings] = useState({
+  const [advancedSettings, setAdvancedSettings] = useState(initialSettings?.advancedSettings || {
     enablePerPostType: false,
     applyToBlogPosts: false,
     applyToPages: false,
@@ -104,7 +108,7 @@ const Index = () => {
     disableForCategories: false,
     disabledCategories: [],
   });
-  
+
   // Update general settings
   const updateGeneralSettings = (key: string, value: any) => {
     setGeneralSettings(prev => ({ ...prev, [key]: value }));
@@ -153,25 +157,67 @@ const Index = () => {
     setHasChanges(true);
   };
   
-  // Handle save
-  const handleSave = () => {
-    setIsSaving(true);
-    
-    // Simulate saving to server
-    setTimeout(() => {
-      setIsSaving(false);
-      setHasChanges(false);
-      console.log('Settings saved:', {
-        generalSettings,
-        textSettings,
-        keyboardSettings,
-        imageSettings,
-        jsSettings,
-        appearanceSettings,
-        messages,
-        advancedSettings,
+  // Handle save using WordPress AJAX
+  const handleSave = async () => {
+    if (!initialSettings?.ajaxUrl || !initialSettings?.nonce) {
+      console.error('WordPress AJAX URL or nonce is missing');
+      toast({
+        title: 'Error',
+        description: 'Could not save settings. WordPress configuration is missing.',
+        variant: 'destructive',
       });
-    }, 1000);
+      return;
+    }
+
+    setIsSaving(true);
+
+    try {
+      // Save each settings group
+      const settingsGroups = [
+        { type: 'general_settings', data: generalSettings },
+        { type: 'text_settings', data: textSettings },
+        { type: 'keyboard_settings', data: keyboardSettings },
+        { type: 'image_settings', data: imageSettings },
+        { type: 'js_settings', data: jsSettings },
+        { type: 'appearance_settings', data: appearanceSettings },
+        { type: 'messages', data: messages },
+        { type: 'advanced_settings', data: advancedSettings }
+      ];
+
+      for (const group of settingsGroups) {
+        const formData = new FormData();
+        formData.append('action', 'copyprotect_save_settings');
+        formData.append('nonce', initialSettings.nonce);
+        formData.append('settings_type', group.type);
+        formData.append('settings', JSON.stringify(group.data));
+
+        const response = await fetch(initialSettings.ajaxUrl, {
+          method: 'POST',
+          body: formData,
+          credentials: 'same-origin'
+        });
+
+        const result = await response.json();
+        if (!result.success) {
+          throw new Error(`Failed to save ${group.type}: ${result.data}`);
+        }
+      }
+
+      setHasChanges(false);
+      toast({
+        title: 'Success',
+        description: 'Settings saved successfully.',
+      });
+    } catch (error) {
+      console.error('Error saving settings:', error);
+      toast({
+        title: 'Error',
+        description: 'Failed to save settings. Please try again.',
+        variant: 'destructive',
+      });
+    } finally {
+      setIsSaving(false);
+    }
   };
   
   // Render the active tab content
