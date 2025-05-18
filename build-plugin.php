@@ -15,7 +15,6 @@ $plugin_slug = 'copyprotect';
 $dist_dir = 'dist';
 $admin_js_dir = 'admin/js';
 $admin_css_dir = 'admin/css';
-$admin_assets_dir = 'admin/assets';
 $public_js_dir = 'public/js';
 $public_css_dir = 'public/css';
 
@@ -23,7 +22,6 @@ $public_css_dir = 'public/css';
 $dirs_to_check = [
     $admin_js_dir,
     $admin_css_dir,
-    $admin_assets_dir,
     $public_js_dir,
     $public_css_dir
 ];
@@ -62,22 +60,6 @@ if (!empty($js_files)) {
         file_put_contents("$admin_js_dir/copyprotect-admin.js", file_get_contents($js_files[0]));
         echo "Admin JS copied (using first available JS file).\n";
     }
-    
-    // Copy any map files for debugging
-    foreach (glob("$dist_dir/assets/*.js.map") as $map_file) {
-        $dest = "$admin_js_dir/" . basename($map_file);
-        copy($map_file, $dest);
-        echo "Copied map file: " . basename($map_file) . "\n";
-    }
-    
-    // Copy any chunk files (if any)
-    foreach ($js_files as $js_file) {
-        if ($js_file != $main_js) {
-            $dest = "$admin_js_dir/" . basename($js_file);
-            copy($js_file, $dest);
-            echo "Copied JS chunk: " . basename($js_file) . "\n";
-        }
-    }
 } else {
     echo "Warning: No JS files found in build output.\n";
 }
@@ -88,18 +70,11 @@ $css_files = glob("$dist_dir/assets/*.css");
 if (!empty($css_files)) {
     file_put_contents("$admin_css_dir/copyprotect-admin.css", file_get_contents($css_files[0]));
     echo "Admin CSS copied successfully.\n";
-    
-    // Copy any CSS map files
-    foreach (glob("$dist_dir/assets/*.css.map") as $map_file) {
-        $dest = "$admin_css_dir/" . basename($map_file);
-        copy($map_file, $dest);
-        echo "Copied CSS map file: " . basename($map_file) . "\n";
-    }
 } else {
     echo "Warning: No CSS files found in build output.\n";
 }
 
-// Copy other asset files (images, fonts, etc.)
+// Copy asset files (images, fonts, etc.)
 echo "Copying other assets...\n";
 $asset_files = array_merge(
     glob("$dist_dir/assets/*.{png,jpg,jpeg,gif,svg}", GLOB_BRACE),
@@ -107,10 +82,13 @@ $asset_files = array_merge(
 );
 
 if (!empty($asset_files)) {
+    if (!is_dir("$admin_css_dir/assets")) {
+        mkdir("$admin_css_dir/assets", 0755, true);
+    }
+    
     foreach ($asset_files as $asset) {
         $filename = basename($asset);
-        copy($asset, "$admin_assets_dir/$filename");
-        echo "Copied asset: $filename\n";
+        copy($asset, "$admin_css_dir/assets/$filename");
     }
     echo "Other assets copied successfully.\n";
 }
